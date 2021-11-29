@@ -1,28 +1,36 @@
 <template>
   <div id="app">
+    <ActionBar />
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Home msg="Welcome to Overstep Champions"/>
+    <!-- <router-link to="/">Home</router-link> | -->
+    <!-- <router-link to="/about">About</router-link> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ActionBar from './components/ActionBar/ActionBar.vue'
+import Home from './components/Home/Home.vue'
+
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ActionBar,
+    Home
   }
 }
 </script>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200&display=swap');
+
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  height: 100%;
   color: #2c3e50;
-  margin-top: 60px;
+  font-family: 'Josefin Sans', sans-serif;  /* margin-top: 60px; */
 }
 </style>
