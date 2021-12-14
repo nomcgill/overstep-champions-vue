@@ -1,8 +1,8 @@
 <template>
   <div id="app">
+    <NavBar />
     <ActionBar />
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Home msg="Welcome to Overstep Champions"/>
+    <Home />
     <!-- <router-link to="/">Home</router-link> | -->
     <!-- <router-link to="/about">About</router-link> -->
   </div>
@@ -11,12 +11,14 @@
 <script>
 import ActionBar from './components/ActionBar/ActionBar.vue'
 import Home from './components/Home/Home.vue'
+import NavBar from './components/NavBar/NavBar.vue'
 
 
 
 export default {
   name: 'App',
   components: {
+    NavBar,
     ActionBar,
     Home
   }

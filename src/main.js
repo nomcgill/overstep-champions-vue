@@ -1,8 +1,16 @@
 import Vue from 'vue'
+import router from '@/router'
+
+import './setup.js'
+import '@assets/scss/main.scss'
+
 import App from './App.vue'
-import router from './router'
+
+
+
 
 Vue.config.productionTip = false
+Vue.prototype.$globalModalData = { level:0 }
 
 new Vue({
   router,

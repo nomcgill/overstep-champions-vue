@@ -1,22 +1,41 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="skill-list">
+    <h1>Skills</h1>
+    <Skill 
+      v-for="(skill, index) in currentSkills"
+      :skill="skill"
+      :champion="champion"
+      :key="index"
+    />
   </div>
 </template>
 
 <script>
+
+import Skill from '@/components/shared/components/Skill.vue'
+
 export default {
   name: 'SkillList',
+  components: {
+    Skill
+  },
   props: {
-    msg: String
+    champion: {
+      type: Object
+    }
+  },
+  data () {
+    return {
+      currentSkills: [...this.champion.currentSkills]
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.skill-list {
+  /* margin: 1em; */
 }
 ul {
   list-style-type: none;
