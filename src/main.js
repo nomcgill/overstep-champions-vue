@@ -2,7 +2,7 @@ import Vue from 'vue'
 import router from '@/router'
 
 import './setup.js'
-import '@assets/scss/main.scss'
+import '@/assets/scss/main.scss'
 
 import App from './App.vue'
 

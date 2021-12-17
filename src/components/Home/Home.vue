@@ -9,7 +9,7 @@
 <script>
 
 import SkillList from './SkillList.vue'
-import sampleChampion from '@/assets/sampleData/sampleChampion.json'
+import sampleChampion from '@/assets/sampleStuff/championLucyfer.json'
 
 export default {
   name: 'Home',

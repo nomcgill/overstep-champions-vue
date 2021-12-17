@@ -67,8 +67,8 @@ export default {
         border-radius: 50%;
         width: 30px;
         height: 30px;
-        border-color: rgba($Redesign-DarkBlue, 0.15);
-        border-left-color: rgba($Redesign-DarkBlue, 1);
+        border-color: rgba(darkblue, 0.15);
+        border-left-color: rgba(darkblue, 1);
     }
     @keyframes forward {
         0% {
