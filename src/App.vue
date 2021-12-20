@@ -1,19 +1,18 @@
 <template>
   <div id="app">
     <NavBar />
-    <ActionBar />
-    <Home />
+    <ActionBar v-bind:header="header" />
+    <Home v-bind:header="header" />
     <!-- <router-link to="/">Home</router-link> | -->
     <!-- <router-link to="/about">About</router-link> -->
   </div>
 </template>
 
 <script>
+
 import ActionBar from './components/ActionBar/ActionBar.vue'
 import Home from './components/Home/Home.vue'
 import NavBar from './components/NavBar/NavBar.vue'
-
-
 
 export default {
   name: 'App',
@@ -21,6 +20,17 @@ export default {
     NavBar,
     ActionBar,
     Home
+  },
+  props: {
+    header: {
+      required: false
+    }
+  },
+  created() {
+    this.$bus.$on('close-drawer', () => { this.$emit('close') })
+  },
+  beforeDestroy() {
+    this.$bus.$off('close-drawer')
   }
 }
 </script>

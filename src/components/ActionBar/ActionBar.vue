@@ -1,34 +1,45 @@
 <template>
-  <div id="action-bar" @click.prevent="invokeModal('prevent')">
-      <modal 
-        v-if="modal"
+    <!-- v-on:click="changeHeader" -->
+  <div id="action-bar" 
+    @click.prevent="actionBarClick('notepad')"
+  > {{ header }}
+
+      <notepad-modal 
+        v-if="modal === `notepad`"
+        @close="modal = false"
         v-model="modal"
-        :modalType="modal"
         :modalData="`modal`"
       />
+  
   </div>
 </template>
 
-
 <script>
 
-import Modal from '@/components/shared/components/Modal.vue'
+import { bus } from '@/main'
+import NotepadModal from '@/components/ActionBar/NotepadModal'
+// import NotepadModal from './NotepadModal.vue'
 
 export default {
   name: 'ActionBar',
   components: {
-    Modal
+    NotepadModal
   },
   props: {
   },
   data(){
     return {
-      modal: false
+      modal: false,
+      header: ''
     }
   },
   methods: {
-    invokeModal(type){
+    actionBarClick(type){
       this.modal = type
+    },
+    changeHeader (){
+      this.header = "changed header";
+      bus.$emit('changeIt', 'changed header');
     }
   }
 }

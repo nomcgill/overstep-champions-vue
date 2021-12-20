@@ -6,11 +6,10 @@ import '@/assets/scss/main.scss'
 
 import App from './App.vue'
 
-
-
-
 Vue.config.productionTip = false
 Vue.prototype.$globalModalData = { level:0 }
+
+export const bus = new Vue();
 
 new Vue({
   router,

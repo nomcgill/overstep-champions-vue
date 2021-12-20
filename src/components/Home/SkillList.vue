@@ -1,6 +1,6 @@
 <template>
   <div class="skill-list">
-    <h1>Skills</h1>
+    <h1>Skillssss</h1>
     <Skill 
       v-for="(skill, index) in currentSkills"
       :skill="skill"
