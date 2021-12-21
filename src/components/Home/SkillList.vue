@@ -1,11 +1,13 @@
 <template>
   <div class="skill-list">
-    <h1>Skillssss</h1>
+    <h1 @click="toggleAll">Skills</h1>
     <Skill 
       v-for="(skill, index) in currentSkills"
       :skill="skill"
       :champion="champion"
+      :dropdown="skill.opened"
       :key="index"
+      :index="index"
     />
   </div>
 </template>
@@ -26,7 +28,20 @@ export default {
   },
   data () {
     return {
-      currentSkills: [...this.champion.currentSkills]
+      currentSkills: this.champion.currentSkills
+    }
+  },
+  methods: {
+
+    toggleAll(){
+      let allOpenedStatus = false
+      this.currentSkills.forEach(skill => {
+        // Check if any skills are closed.
+        if (!skill.opened){
+          allOpenedStatus = true
+        }
+      })
+      this.$emit('allOpened', allOpenedStatus)
     }
   }
 }

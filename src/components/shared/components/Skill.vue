@@ -1,11 +1,14 @@
 <template>
-  <div :id="skillStrings.name" class="skill-box">
+  <div 
+    :id="skillStrings.name"
+    class="skill-box"
+    v-bind:class="'skill-index-'+index">
       <div 
         class='skill-head-pane skill-header-open' 
-        @click.prevent="toggleDetails($e)"
+        @click="toggleOpened"
       >
           <div class='skill-head-pane-top'>
-              <h3>{{ skillStrings.name  }}
+              <h3>{{ skillStrings.name }}
                   {{ skillStrings.bountyHunterSpecialization }}
                   {{ skillStrings.demonicOriginTitle }}
               </h3>
@@ -18,21 +21,24 @@
                 <span :class="skillStrings.actionColor">{{ skillStrings.actionType }}</span>
                 {{ skillStrings.skillLevel }}
               </p>
+              <!-- <p>{{ dropdownString }}</p> -->
               <!-- <p>{{ this.skill.skillLevel }}</p> -->
           </div>
       </div>
       <!-- <div class="{{ 'skill-dropdown ' + hideDropdown }}> -->
-      <div class="skill-dropdown">
-          {{ skillStrings.demonicOriginNote }}
-          {{ skillStrings.elementList }}
-          {{ skillStrings.flavor }}
-          {{ skillStrings.flavor2 }}
-          {{ skillStrings.flavor3 }}
-          {{ skillStrings.flavor4 }}
-          {{ skillStrings.impact }}
-          {{ skillStrings.impact2 }}
-          {{ skillStrings.plea }}
-      </div>         
+      <transition name="slide-fade">
+        <div v-if="dropdown" class="skill-dropdown">
+            {{ skillStrings.demonicOriginNote }}
+            {{ skillStrings.elementList }}
+            {{ skillStrings.flavor }}
+            {{ skillStrings.flavor2 }}
+            {{ skillStrings.flavor3 }}
+            {{ skillStrings.flavor4 }}
+            {{ skillStrings.impact }}
+            {{ skillStrings.impact2 }}
+            {{ skillStrings.plea }}
+        </div>
+      </transition>
   </div>
 </template>
 
@@ -45,19 +51,26 @@ export default {
   components: {
   },
   props: {
-      skill: {
-          type: Object
-      },
-      champion: {
-        type: Object
-      }
+    index: {
+      type: Number
+    },
+    skill: {
+      type: Object
+    },
+    champion: {
+      type: Object
+    },
+    dropdown: {
+      type: Boolean
+    }
   },
   data () {
-      return {
-        //   skillStrings: {}
-      }
+    return {
+      // dropdown: this.skill.opened
+    }
   },
   created() {
+
     let flavor = typeof this.skill.flavor === 'string' && this.skill.flavor !== ' ' ? this.skill.flavor : ''
     let flavor2 = this.skill.flavor2 ? this.skill.flavor2 : ''
     let flavor3 = this.skill.flavor3 ? this.skill.flavor3 : ''
@@ -112,12 +125,11 @@ export default {
         shownCategory: shownCategory,
         skillLevel: this.skill.skillLevel
     }
-
     this.skillStrings = skillStrings
   },
   methods: {
-    toggleDetails(event){
-      console.log(event)
+    toggleOpened(){
+      this.$bus.$emit(this.$bus.SKILL_OPEN, {skill:this.skill, opened:!this.dropdown})
     }
   }
 }
@@ -130,12 +142,15 @@ export default {
   padding: .5em;
   margin: 1em;
   border-bottom: solid 1px black;
+  transition: all .3s ease;
 }
 
 h3 {
   margin-top: -.5em;
   margin-bottom: 0;
 }
+
+
 
 @media only screen and (min-width: 768px) {
 

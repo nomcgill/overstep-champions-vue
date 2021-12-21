@@ -20,7 +20,7 @@
 
 <script>
 
-// import { bus } from '@/main'
+import { bus } from '@/main'
 import Modal from '@/components/shared/components/Modal.vue'
 
 export default {
@@ -40,11 +40,11 @@ export default {
     // invokeModal(type){
     //   this.modal = type
     // },
-    // changeHeader (){
-    //   this.header = "changed header";
-    //   bus.$emit('changeIt', 'changed header');
-    // }
-      }
+    changeHeader (){
+      this.header = "changed header";
+      bus.$emit('changeIt', 'changed header');
+    }
+  }
 }
 </script>
 

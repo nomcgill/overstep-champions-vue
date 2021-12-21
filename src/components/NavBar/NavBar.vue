@@ -1,6 +1,6 @@
 <template>
   <nav>
-      <h1>OVERSTEP</h1>
+      <!-- <h1>OVERSTEP</h1> -->
   </nav>
 </template>
 
