@@ -23,7 +23,7 @@
             >
               {{ fullscreenIcon }}
             </i>
-            <div 
+            <div id="close-x"
               v-on:click="closeModal"
             >
               X
@@ -35,7 +35,7 @@
           <slot></slot>
         </div>
 
-        <div v-if="$slots.footer" class="footer" v-test="'overlay__modal-container--footer'">
+        <div v-if="$slots.footer" class="footer">
           <slot name="footer" class="footer"></slot>
         </div>
         <div class="modal-dropdown" v-if="dropDown">
@@ -169,10 +169,12 @@ export default {
   }
 
   .modal-container {
+    color:black;
     background-color: white;
     border-radius: 2px;
+    border: solid 1px black;
     box-shadow: 0 0 4px rgba(black, 0.17);
-    border-top: 6px solid darkblue;
+    border-top: 6px solid black;
     display: flex;
     flex-direction: column;
     margin-top: 0;
@@ -190,7 +192,7 @@ export default {
     .header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      // align-items: center;
       font-weight: 600;
       padding: 16px 20px;
       min-height: 56px;
@@ -232,13 +234,16 @@ export default {
       //   margin-left: 4px;
       // }
     }
+
+    #close-x {
+      // margin-top: 8px;
+    }
   }
 
   @media only screen and (min-width: 768px) {
     .modal-container {
       min-width: 440px;
     }
-
 
   }
 

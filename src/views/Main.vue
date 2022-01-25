@@ -1,18 +1,19 @@
 <template>
-  <div class="home">
+  <div class="Main">
+    <h1>HELLO</h1>
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <Home msg="Welcome to Your Vue.js App"/>
+    <Main msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Home from '@/components/Home/Home.vue'
+import Main from '@/components/Main/Main.vue'
 
 export default {
-  name: 'Home',
+  name: 'Main',
   components: {
-    Home
+    Main
   }
 }
 </script>
