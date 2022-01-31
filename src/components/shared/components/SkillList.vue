@@ -128,7 +128,7 @@ export default {
   created(){
     let levelSections = ["Given","Basic","Advanced","Master"]
     let actionTypeSections = ["Passive","Muscle","Evaluate","Influence","Channel"]
-    let categorySections = ["Background","Role","Source","Intersection"]
+    let categorySections = ["Background","Proficiency","Role","Source","Intersection"]
     let openedSections = {}
     levelSections.forEach(section => openedSections[section] = true)
     actionTypeSections.forEach(section => openedSections[section] = true)
@@ -172,7 +172,7 @@ export default {
     return {
       levelSections: ["Given","Basic","Advanced","Master"],
       actionTypeSections: ["Passive","Muscle","Evaluate","Influence","Channel"],
-      categorySections: ["Background","Role","Source","Intersection"],
+      categorySections: ["Background","Proficiency","Role","Source","Intersection"],
       openedSections: {},
     }
   },

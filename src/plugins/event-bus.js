@@ -15,6 +15,8 @@ export default {
         EventBus.SKILL_OPEN = 'SKILL_OPEN'
         EventBus.ALL_SKILL_OPEN = 'ALL_SKILL_OPEN'
         EventBus.TOGGLE_SKILL_CHOICE = 'TOGGLE_SKILL_CHOICE'
+        EventBus.UPDATE_PROFICIENCIES = 'UPDATE_PROFICIENCIES'
+
 
         EventBus.CREATE_TOAST = 'CREATE_TOAST'
         EventBus.CLEAR_TOASTS = 'CLEAR_TOASTS'

@@ -13,8 +13,37 @@ const additionalBusMethods = {
   },
 
   setChampionLevel(champion, level){
-    // console.log(champion)
+
     Vue.set(champion, "level", level)
+
+    // Gotta also control those proficiencies that are based on level.
+    // No proficiencies below level 4.
+    let filteredOutSkillArray = []
+    if (level < 4){
+      filteredOutSkillArray = champion.currentSkills.filter(each=> each.category !== "Proficiency")
+    }
+    // One proficiency at level 4+.
+    else if (level >= 4 && level < 8){
+      filteredOutSkillArray = champion.currentSkills.filter(each=> each.profLevel !== 8)
+    }
+    // If level is 8 or more, keep proficiencies untouched.
+    else if (level >= 8){
+      return
+    }
+
+    Vue.set(champion, "currentSkills", filteredOutSkillArray)
+
+  },
+
+  // It's already been decided that this is a new Role or Source. Get rid of those skills.
+  cleanseSkills(champion, roleSource){
+    let filteredOutRoleOrSourceSkills = champion.currentSkills.filter(each=> {each.category !== roleSource})
+    Vue.set(champion, "currentSkills",(filteredOutRoleOrSourceSkills))
+  },
+
+  addGivenSkills(champion, roleSourceLabel, roleSourceChoice){
+    console.log("Need to add the logic for adding the roleSource Given skills for the new: ")
+    console.log(roleSourceChoice + ' decision.')
   },
 
   // Update Background, including new Background skill.
@@ -75,6 +104,28 @@ const additionalBusMethods = {
     }
     Vue.set(champion, "currentSkills", newArray)
   },
+  
+  // Update either the level 4 or 8 non-damage proficiency. The level bus method should be controlling qualifications.
+  // In modal.vue, 4 & 8 should not be available for duplication.
+  // Also there, this function should not be accessible if under the level threshold.
+  updateProficiencies(champion, profChoice, profLevel){
+    // Remove previous proficiency at that level.
+    let filteredOutSkillArray = champion.currentSkills.filter(each=> each.profLevel !== profLevel)
+    // Create new Proficiency skill based on choice.
+    let newProfSkill = {
+      name: profChoice + ' Proficiency',
+      action: "Passive",
+      skillLevel: "Given",
+      category: "Proficiency",
+      damage: false,
+      flavor: "You've chosen " + profChoice + " as your Champion level " + profLevel + " proficiency.",
+      impact: "Strengthen all Out of Danger " + profChoice + " actions that do not inflict damage to enemies.",
+      profLevel: profLevel
+    }
+
+    // Add prof choice to existing (filtered) skills list.
+    Vue.set(champion, "currentSkills",([...filteredOutSkillArray, newProfSkill]))
+  },
 
   // Calculate new intersection based on role and source.
   formIntersection(champion, database){
@@ -86,15 +137,18 @@ const additionalBusMethods = {
           }
         }
       })[0]
-      // Running an intersection change ONLY IF the new intersection is different than the previous.
-      if (champion.intersection.title !== intersection.title){
-        let filteredOutSkillArray = champion.currentSkills.filter(each=> !(each.category === 'Intersection'))
-        Vue.set(champion, "currentSkills", filteredOutSkillArray)
+      if (champion.intersection){
+        // Running an intersection change ONLY IF the new intersection is different than the previous.
+        if (champion.intersection.title !== intersection.title){
+          let filteredOutSkillArray = champion.currentSkills.filter(each=> !(each.category === 'Intersection'))
+          Vue.set(champion, "currentSkills", filteredOutSkillArray)
+          Vue.set(champion, "intersection", intersection)
+        }
+      }
+      else {
         Vue.set(champion, "intersection", intersection)
       }
-
-
-
+    
     }
 
   }

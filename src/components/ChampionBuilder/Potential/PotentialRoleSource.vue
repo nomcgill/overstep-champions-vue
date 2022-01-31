@@ -81,25 +81,26 @@ export default {
             return string.toLowerCase().replace(/\s/g, '')
         },
         clickRoleSource(page, roleSource){
+
             if (page === "roles"){
+                // controlling the highlight logic
                 if (this.priorChoices){
                     this.priorChoices = this.priorChoices.filter(each => !this.listOfRoles.includes(each))
                 }
-                // Object.assign(this.editingCheckmark, {role: true})
-                // this.editingCheckmark.role = true
-                // this.editingCheckmark.push("role")
                 this.$emit('checkmarks', 'role')
-                this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSource)
+                if (this.champion.role !== roleSource){
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSource)
+                }
             }
+
             if (page === "sources"){
                 if (this.priorChoices){
                     this.priorChoices = this.priorChoices.filter(each => !this.listOfSources.includes(each))
                 }
-                // Object.assign(this.editingCheckmark, {source: true})
-                // this.editingCheckmark.source = true
-                // this.editingCheckmark.push("source")
                 this.$emit('checkmarks', 'source')
-                this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSource)
+                if (this.champion.source !== roleSource){
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSource)
+                }
             }
         }
     }

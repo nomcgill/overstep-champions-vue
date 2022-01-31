@@ -66,7 +66,6 @@ export default {
       handler(newChamp){
         this.champion = newChamp
         console.log("Watching Champion changes in Main...")
-        // console.log(this.champion)
         this.checkChampionRequirements()
       },
     }

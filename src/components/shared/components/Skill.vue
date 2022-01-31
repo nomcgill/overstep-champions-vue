@@ -161,6 +161,7 @@ export default {
           (this.skill.category === "Role") ? this.champion.role :
           (this.skill.category === "Source") ? this.champion.source : 
           (this.skill.category === "Background") ? "Background" :
+          (this.skill.category === "Proficiency") ? "Proficiency" :
           ''
       let skillStrings = {
           flavor: flavor,

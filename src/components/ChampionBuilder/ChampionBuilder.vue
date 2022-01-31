@@ -10,11 +10,11 @@
         <!-- Skills, including proficiencies above levels 4 & 8 -->
       <router-link class="builder-router-button" to="/build/skills">Skills</router-link>
     </div>
-    <pop-out-icon
+    <!-- <pop-out-icon
       v-if="currentRoute !== 'ChampionBuilderSkills'"
       :champion="champion"
       :database="database"
-    />
+    /> -->
     <potential
       v-if="currentRoute === 'ChampionBuilderPotential'"
       :champion="champion"
@@ -39,7 +39,7 @@
 import Potential from '@/components/ChampionBuilder/Potential/Potential'
 import Background from '@/components/ChampionBuilder/Background/Background'
 import Skills from '@/components/ChampionBuilder/Skills/Skills'
-import PopOutIcon from '@/components/shared/components/PopOutIcon'
+// import PopOutIcon from '@/components/shared/components/PopOutIcon'
 
 export default {
   name: 'CharacterBuilder',
@@ -47,7 +47,7 @@ export default {
     Potential,
     Background,
     Skills,
-    PopOutIcon
+    // PopOutIcon
   },
   props: {
     champion: {
@@ -112,7 +112,8 @@ export default {
 .builder-router-button.router-link-active {
   color: black;
   font-weight: 900;
-  /* font-size: 1.7em; */
+  font-size: 1.2em;
+  /* padding-top: 10px; */
 }
 
 .builder-top-row {
