@@ -31,7 +31,7 @@
             >
               {{ currentQuantity(section) }}<span v-if="section !=='Given'">/{{ calculateSectionSizeBasedOnLevel(section) }}</span>
             </h3>
-            <h3 v-else-if="location === 'Champion Builder Skills' && !calculateSectionSizeBasedOnLevel(section)">Higher level required.</h3>
+            <h3 v-else-if="location === 'Champion Builder Skills' && !calculateSectionSizeBasedOnLevel(section)">Higher lvl required.</h3>
             <!-- <p>&nbsp;</p> -->
           </div>
         </div>

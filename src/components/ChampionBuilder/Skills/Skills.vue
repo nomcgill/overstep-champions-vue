@@ -4,7 +4,7 @@
     <div v-else>
       <!-- <h2>Skills</h2> -->
       <div id="skills-page-top">
-        <button v-bind:class='{disabled: champion.level < 4 }' id="prof-button" @click.prevent="nondamageModal = true" >Proficiency</button>
+        <button v-bind:class='{disabled: champion.level < 4 }' id="prof-button" @click.prevent="nondamageModal = true" >Proficiencies</button>
         <div id="skills-nav-bar">
           <button @click="currentDisplayTab = 'Role'" v-bind:class="{selectedTab: roleTab}">{{ champion.role }}</button>
           <button @click="currentDisplayTab = 'Source'" v-bind:class="{selectedTab: sourceTab}">{{ champion.source }}</button>
@@ -124,7 +124,6 @@ export default {
   border-left: solid 1px black;
   padding: 8px 5px;
   text-align: center;
-  /* margin-left: 5px; */
   background-color: gray;
   white-space: nowrap;
   overflow: hidden;
@@ -147,7 +146,7 @@ export default {
 #skills-page-top #prof-button {
   background-color: #65a779;
   color: white;
-  width: 30%;
+  width: 32%;
 }
 
 .disabled {

@@ -54,7 +54,6 @@
       <!-- <div class="{{ 'skill-dropdown ' + hideDropdown }}> -->
       <transition name="slide-fade">
         <div v-if="dropdownOpened" class="skill-dropdown">
-            {{ skillStrings.demonicOriginNote }}
             {{ skillStrings.elementList }}
             {{ skillStrings.flavor }}
             {{ skillStrings.flavor2 }}
@@ -135,7 +134,6 @@ export default {
       let flavor4 = this.skill.flavor4 ? this.skill.flavor4 : ''
       let impact = typeof this.skill.impact === 'string' ? this.skill.impact : ''
       let impact2 = this.skill.impact2 ? this.skill.impact2 : ''
-      let demonicOriginNote = this.skill.demonicOriginNote && this.level <= 5 ? this.skill.demonicOriginNote : ''
       // function pleaFormat(plea){
       //     return 
       //         <PleaFormat plea={plea} />
@@ -143,7 +141,7 @@ export default {
       // let plea = this.skill.plea ? pleaFormat(this.skill.plea) : ''
 
 
-      let demonicOriginTitle = this.skill.demonicOriginNote ? " Origin" : ''
+      let demonicOriginTitle = this.skill.demonicOrigin ? " Origin" : ''
       let name = this.skill.beastName ? this.skill.beastName : this.skill.name
       let bountyHunterSpecialization = this.skill.bountyCategory ? ' (' + this.skill.bountyCategory + ' spec.)' : '' 
       let elementList = this.skill.elementList ? this.skill.elementList : ''
@@ -161,7 +159,7 @@ export default {
           (this.skill.category === "Role") ? this.champion.role :
           (this.skill.category === "Source") ? this.champion.source : 
           (this.skill.category === "Background") ? "Background" :
-          (this.skill.category === "Proficiency") ? "Proficiency" :
+          (this.skill.category === "Background") ? "Background" :
           ''
       let skillStrings = {
           flavor: flavor,
@@ -170,7 +168,6 @@ export default {
           flavor4: flavor4,
           impact: impact,
           impact2: impact2,
-          demonicOriginNote: demonicOriginNote,
           demonicOriginTitle: demonicOriginTitle,
           name: name,
           bountyHunterSpecialization: bountyHunterSpecialization,

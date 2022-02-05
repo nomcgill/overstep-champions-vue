@@ -25,6 +25,7 @@
             </i>
             <div id="close-x"
               v-on:click="closeModal"
+              v-if="!noCornerX"
             >
               X
             </div>
@@ -83,6 +84,10 @@ export default {
     closeOnEscapeKey: {
       type: Boolean,
       default: true
+    },
+    noCornerX: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -152,7 +157,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   .overlay {
-    background-color: rgba(darkblue, 0.25);
+    background-color: rgba(rgb(0, 0, 0), 0.35);
     height: 100vh;
     width: 100vw;
     position: fixed;
@@ -182,6 +187,8 @@ export default {
     padding: 0;
     position: relative;
     transition: all 100ms ease-out;
+    max-height: 95vh;
+    max-width: 600px;
     &.showDropDown{
       border-radius: 2px 2px 0 0;
     }
@@ -219,7 +226,8 @@ export default {
       padding: 0 20px 20px;
       height: 100%;
       flex: 1;
-      max-height: calc(100vh - 46px);
+      max-height: calc(59vh);
+      overflow: scroll;
     }
 
     .footer {

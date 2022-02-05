@@ -7,15 +7,9 @@ import Vue from 'vue'
 
 const additionalBusMethods = {
 
-  // Overwrite vue Champion with another Champion's data.
-  replaceChampion(){
-    // Replaces Champion value in App.vue
-  },
-
+  // Set the new Champion level.
   setChampionLevel(champion, level){
-
     Vue.set(champion, "level", level)
-
     // Gotta also control those proficiencies that are based on level.
     // No proficiencies below level 4.
     let filteredOutSkillArray = []
@@ -32,18 +26,34 @@ const additionalBusMethods = {
     }
 
     Vue.set(champion, "currentSkills", filteredOutSkillArray)
-
   },
 
-  // It's already been decided that this is a new Role or Source. Get rid of those skills.
-  cleanseSkills(champion, roleSource){
-    let filteredOutRoleOrSourceSkills = champion.currentSkills.filter(each=> {each.category !== roleSource})
-    Vue.set(champion, "currentSkills",(filteredOutRoleOrSourceSkills))
+  // Set the new Champion Role bringing in the full skills list already.
+  setChampionRole(champion, database, role, newSkillList){
+    // TO-DO : Apply all of the things that come with the new Role, like HP and such.
+    console.log(database)
+
+    Vue.set(champion, "role", role)
+    this.newChampionSkillList(champion, newSkillList)
   },
 
-  addGivenSkills(champion, roleSourceLabel, roleSourceChoice){
-    console.log("Need to add the logic for adding the roleSource Given skills for the new: ")
-    console.log(roleSourceChoice + ' decision.')
+  // Set the new Champion Source bringing in the new skills list already.
+  setChampionSource(champion, database, source, newSkillList){
+    // TO-DO : Apply all of the things that come with the new Source, like HP and such.
+
+    console.log(database)
+    Vue.set(champion, "source", source)
+    this.newChampionSkillList(champion, newSkillList)
+  },
+
+  // Get rid of skills of that category
+  cleanseSkills(champion, category){
+    let filteredOutSkillArray = champion.currentSkills.filter(each=> each.category !== category)
+    Vue.set(champion, "currentSkills",filteredOutSkillArray)
+  },
+
+  newChampionSkillList(champion, newSkillList){
+    Vue.set(champion, "currentSkills", newSkillList)
   },
 
   // Update Background, including new Background skill.
