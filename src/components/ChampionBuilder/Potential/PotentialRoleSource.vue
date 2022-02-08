@@ -112,10 +112,18 @@ export default {
             return nonTraitSkillList
         },
         // Bring in the role/source, its name, and the trait skills.
-        applyRoleSource(page, roleSourceTitle, newTraitSkills){
+        applyRoleSource(page, roleSourceTitle, newTraitSkills, currentDecisionName){
             // console.log(this.champion.currentSkills)
+            // console.log(newTraitSkills)
 
+            let previousRoleDecision = this.champion.decision ? this.champion.decision.role : false
+            let previousSourceDecision = this.champion.decision ? this.champion.decision.source : false
             if (page === "roles"){
+
+                let decisionObject = {
+                    role: currentDecisionName,
+                    source: previousSourceDecision
+                }
 
                 // controlling the highlight logic
                 if (this.priorChoices){
@@ -126,7 +134,7 @@ export default {
                 if (this.champion.role !== roleSourceTitle){
                     this.$bus.$emit(this.$bus.CLEANSE_CATEGORY_SKILLS, 'Role')
                     let newSkillList = [...newTraitSkills, ...this.champion.currentSkills]
-                    this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSourceTitle, newSkillList)
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSourceTitle, newSkillList, decisionObject)
                 }
                 // Otherwise, only re-apply role traits.
                 else {
@@ -134,15 +142,20 @@ export default {
                     let newSkillList = [...newTraitSkills, ...this.filterOutRoleOrSourceTraits("Role")]
                     // Compare against old list before wasting an emit on a non-change.
                     let currentSkillsString = JSON.stringify(this.champion.currentSkills.map(skill=>skill.name).sort())
-                    let newSkillListString = JSON.stringify(newSkillList.map(skill=>skill.name).sort())
+                    let newSkillListString = JSON.stringify(newSkillList.map(skill=> skill.name).sort())
                     if (currentSkillsString !== newSkillListString){
-                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList)
+                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList, decisionObject)
                     }
                 }
             }
 
 
             if (page === "sources"){
+
+                let decisionObject = {
+                    role: previousRoleDecision,
+                    source: currentDecisionName
+                }
 
                 if (this.priorChoices){
                     this.priorChoices = this.priorChoices.filter(each => !this.listOfSources.includes(each))
@@ -152,7 +165,7 @@ export default {
                 if (this.champion.source !== roleSourceTitle){
                     this.$bus.$emit(this.$bus.CLEANSE_CATEGORY_SKILLS, 'Source')
                     let newSkillList = [...newTraitSkills, ...this.champion.currentSkills]
-                    this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSourceTitle, newSkillList)
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSourceTitle, newSkillList, decisionObject)
                 }
                 // Otherwise, only re-apply source traits.
                 else {
@@ -162,7 +175,7 @@ export default {
                     let currentSkillsString = JSON.stringify(this.champion.currentSkills.map(skill=>skill.name).sort())
                     let newSkillListString = JSON.stringify(newSkillList.map(skill=>skill.name).sort())
                     if (currentSkillsString !== newSkillListString){
-                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList)
+                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList, decisionObject)
                     }
                 }
             }

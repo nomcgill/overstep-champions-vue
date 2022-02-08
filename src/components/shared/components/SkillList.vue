@@ -198,6 +198,19 @@ export default {
       return sortedSkills
     },
     currentMatchingSkills(sortedBy, section, skillsToMatch){
+      // Checking for Bounty Hunter Specialization first.
+      if (this.location === 'Champion Builder Skills' && this.champion.role === 'Bounty Hunter' && this.champion.decision){
+        let specialty = this.champion.decision.role
+        skillsToMatch = skillsToMatch.filter(skill=>{
+          if (!skill.decisionTrait || skill.category !== 'Role'){
+            return true
+          }
+          else if (skill.decisionTrait === specialty){
+            return true
+          }
+          else { return false }
+        })
+      }
       if (sortedBy === "level"){
         // TESTING CHAMPION BUILDER
         // if (this.location === 'Champion Builder Skills'){
@@ -209,6 +222,7 @@ export default {
         //     }
         //   })
         // }
+        // console.log(skillsToMatch.filter(skill => section === skill.skillLevel))
         return skillsToMatch.filter(skill => section === skill.skillLevel)
       }
       if (sortedBy === "actionType"){

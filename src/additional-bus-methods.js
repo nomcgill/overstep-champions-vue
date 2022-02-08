@@ -8,42 +8,56 @@ import Vue from 'vue'
 const additionalBusMethods = {
 
   // Set the new Champion level.
-  setChampionLevel(champion, level){
+  setChampionLevel(database, champion, level){
     Vue.set(champion, "level", level)
     // Gotta also control those proficiencies that are based on level.
     // No proficiencies below level 4.
-    let filteredOutSkillArray = []
+    let newSkillArray = champion.currentSkills
     if (level < 4){
-      filteredOutSkillArray = champion.currentSkills.filter(each=> each.category !== "Proficiency")
+      newSkillArray = champion.currentSkills.filter(each=> each.category !== "Proficiency")
     }
     // One proficiency at level 4+.
     else if (level >= 4 && level < 8){
-      filteredOutSkillArray = champion.currentSkills.filter(each=> each.profLevel !== 8)
+      newSkillArray = champion.currentSkills.filter(each=> each.profLevel !== 8)
     }
     // If level is 8 or more, keep proficiencies untouched.
-    else if (level >= 8){
-      return
+
+    // Gotta check to see if the Champion's new level qualifies or disqualifies any sidelined skills.
+    // Elementalist Basic, Advanced, and Master Elements Lists are managed here and in setChampionRole.
+    if (champion.role === "Elementalist"){
+      let currentSkillsWithoutRoleGivens = newSkillArray.filter(skill=> !(skill.trait && skill.category === 'Role'))
+      let qualifiedGivens = database.roles.filter(role=> role.title === "Elementalist")[0].traits.filter(trait=> !(trait.requiredLevel > level))
+      newSkillArray = [...currentSkillsWithoutRoleGivens, ...qualifiedGivens]
     }
 
-    Vue.set(champion, "currentSkills", filteredOutSkillArray)
+
+    Vue.set(champion, "currentSkills", newSkillArray)
   },
 
   // Set the new Champion Role bringing in the full skills list already.
-  setChampionRole(champion, database, role, newSkillList){
+  setChampionRole(champion, database, role, newSkillList, decisionObject){
     // TO-DO : Apply all of the things that come with the new Role, like HP and such.
-    console.log(database)
+
+    let newSkillArray = newSkillList
+
+    // Elementalist Basic, Advanced, and Master Elements Lists are managed here and in setChampionLevel.
+    if (role === "Elementalist"){
+      let currentSkillsWithoutRoleGivens = newSkillArray.filter(skill=> !(skill.trait && skill.category === 'Role'))
+      let qualifiedGivens = database.roles.filter(role=> role.title === "Elementalist")[0].traits.filter(trait=> !(trait.requiredLevel > champion.level))
+      newSkillArray = [...currentSkillsWithoutRoleGivens, ...qualifiedGivens]
+    }
 
     Vue.set(champion, "role", role)
-    this.newChampionSkillList(champion, newSkillList)
+    this.newChampionSkillList(champion, newSkillArray, decisionObject)
   },
 
   // Set the new Champion Source bringing in the new skills list already.
-  setChampionSource(champion, database, source, newSkillList){
+  setChampionSource(champion, database, source, newSkillList, decisionObject){
     // TO-DO : Apply all of the things that come with the new Source, like HP and such.
 
     console.log(database)
     Vue.set(champion, "source", source)
-    this.newChampionSkillList(champion, newSkillList)
+    this.newChampionSkillList(champion, newSkillList, decisionObject)
   },
 
   // Get rid of skills of that category
@@ -52,8 +66,25 @@ const additionalBusMethods = {
     Vue.set(champion, "currentSkills",filteredOutSkillArray)
   },
 
-  newChampionSkillList(champion, newSkillList){
-    Vue.set(champion, "currentSkills", newSkillList)
+  // Set new skills list for Champion.
+  newChampionSkillList(champion, newSkillList, decisionObject){
+    
+    // But first check skills against certain qualifications:
+
+    // Weed out skills that require minimum level.
+    let newApprovedSkillList = newSkillList.filter(skill => {
+      if (skill.requiredLevel > champion.level){ 
+        // unapprovedSkills.push(skill)
+        return false 
+      }
+      else { return true }
+    })
+
+    // Vue.set(champion, "sidelinedSkills", unapprovedSkills)
+
+    Vue.set(champion, "currentSkills", newApprovedSkillList)
+    // Decisions only apply on roleSources with options, like different Demonic Origins. Otherwise will set false.
+    Vue.set(champion, "decision", decisionObject)
   },
 
   // Update Background, including new Background skill.
@@ -64,7 +95,8 @@ const additionalBusMethods = {
 
     // Remove previous background skills.
     let previousBackgroundSkills = champion.currentSkills.filter(skill=>skill.category === "Background")
-    let noBackgroundSkillsList = champion.currentSkills.filter(skill => skill.name !== previousBackgroundSkills[0].name)
+    let noBackgroundSkillsList = previousBackgroundSkills.length > 0 ? champion.currentSkills.filter(skill => skill.name !== previousBackgroundSkills[0].name)
+    : champion.currentSkills
 
       // Add new background skill to existing list.
       let newBackgroundSkill = {
@@ -76,6 +108,7 @@ const additionalBusMethods = {
         flavor: " ",
         impact: newBackground.description
       }
+      console.log(newBackgroundSkill)
       Vue.set(champion, "currentSkills",([...noBackgroundSkillsList, newBackgroundSkill]))
     },
     

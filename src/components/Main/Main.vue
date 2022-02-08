@@ -65,7 +65,8 @@ export default {
       deep: true,
       handler(newChamp){
         this.champion = newChamp
-        console.log("Watching Champion changes in Main...")
+        // console.log("Watching Champion changes in Main...")
+        console.log(this.champion.currentSkills.map(skill=>skill.name))
         this.checkChampionRequirements()
       },
     }

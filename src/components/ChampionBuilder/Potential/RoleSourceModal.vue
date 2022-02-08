@@ -85,6 +85,8 @@
             :champion="champion"
             :roleSourceData="roleSourceData"
             :page="page"
+            :pendingModalChoice="currentDecisionName"
+            :pendingAnimalName="pendingAnimalName"
         />
 
 
@@ -96,9 +98,9 @@
             <button id="decision-footer-button" v-if="roleSourceData.decisionOptions" @click.prevent="decisionModal = roleSourceData.title" class="button-type-1">
                 <span v-if="!decisionHasBeenMade">Choose a<span v-if="choiceLabel === 'Origin'">n</span></span>
                 {{ choiceLabel }}
-                <span v-if="decisionHasBeenMade">: {{ shortLabel }}</span>
+                <span v-if="decisionHasBeenMade">: {{ currentDecisionName }}</span>
             </button>
-            <button v-if="decisionHasBeenMade" @click.prevent="$emit('applyRoleSource', page, roleSourceData.title, newTraitSkills); $emit('close');" class="button-type-1" :class="{}">Confirm</button>
+            <button v-if="decisionHasBeenMade" @click.prevent="$emit('applyRoleSource', page, roleSourceData.title, newTraitSkills, currentDecisionName); $emit('close');" class="button-type-1" :class="{}">Confirm</button>
         </div>
 
       </modal>
@@ -149,8 +151,21 @@ export default {
         }
     },
     created(){
-        if (this.champion.decision){
-            this.shortLabel = this.champion.decision
+        if (this.page === "roles"){
+            if (this.champion.role === this.roleSource && this.champion.decision.role){
+                this.currentDecisionName = this.champion.decision.role
+                // With Morph, open the modal with the beast-name as data.
+                if (this.champion.role === 'Morph'){
+                    let beastFormName = this.champion.currentSkills.filter(skill=> skill.skillLevel === "Given" && skill.beastName)[0].beastName
+                    let beastName = beastFormName ? beastFormName : false
+                    this.pendingAnimalName = beastName
+                }
+            }
+        }
+        if (this.page === "sources"){
+            if (this.champion.source === this.roleSource && this.champion.decision.source){
+                this.currentDecisionName = this.champion.decision.source
+            }
         }
     },
     computed: {
@@ -168,10 +183,24 @@ export default {
             : ''
         },
         decisionHasBeenMade(){
-            return !(this.roleSourceData.decisionOptions && this.decisions.length < 1)
+            if (this.champion.decision && (this.champion.role === this.roleSource || this.champion.source === this.roleSource)){
+                if ((this.page === "roles" && this.champion.decision.role) || (this.page === "sources" && this.champion.decision.source)){
+                    return true
+                }
+                else {
+                    return !(this.roleSourceData.decisionOptions && this.decisions.length < 1)}
+            }
+            else {
+                return !(this.roleSourceData.decisionOptions && this.decisions.length < 1)
+            }
+        },
+        inherentSkills(){
+            return this.roleSourceData.traits
         },
         newTraitSkills(){
-            return [...this.decisions,...this.inherentSkills]
+            let decisions = this.decisions ? this.decisions : []
+            let inherentSkills = this.inherentSkills ? this.inherentSkills : []
+            return [...decisions,...inherentSkills]
         }
 
     },
@@ -184,9 +213,8 @@ export default {
             sourceLayout: ['description', 'given', 'stories', 'sourceFeature', 'recovery'],
 
             decisions: [],
-            inherentSkills: [],
-
-            shortLabel: false
+            currentDecisionName: false,
+            pendingAnimalName: false
         }
     },
     methods: {
@@ -201,10 +229,14 @@ export default {
            
            return header
         },
-        makeDecisions(decisions, shortLabel){
+        makeDecisions(decisions, currentDecisionName){
             // Decisions being sent should be an ARRAY of NEW SKILLS. Associated roleSource decisions are REQUIRED to accompany the upcoming bus.
             this.decisions = decisions
-            this.shortLabel = shortLabel
+            this.currentDecisionName = currentDecisionName
+            if (this.decisions[0].beastName){
+                this.pendingAnimalName = this.decisions[0].beastName
+                // console.log(this.pendingAnimalName)
+            }
         }
     }
 }

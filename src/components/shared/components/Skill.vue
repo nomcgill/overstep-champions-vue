@@ -96,6 +96,10 @@ export default {
     },
     location: {
       type: String
+    },
+    static: {
+      type: Boolean,
+      required: false
     }
   },
   created(){
@@ -105,7 +109,8 @@ export default {
   },
   computed: {
     dropdownStatic(){
-      return this.location === "Champion Builder Skills" ? true 
+      return this.static ? true
+      : this.location === "Champion Builder Skills" ? true 
       : this.location === "Background Modal" ? true
       : false
     },
@@ -127,7 +132,7 @@ export default {
       return false
     },
     skillStrings: function(){
-      // console.log(this.skill)
+
       let flavor = typeof this.skill.flavor === 'string' && this.skill.flavor !== ' ' ? this.skill.flavor : ''
       let flavor2 = this.skill.flavor2 ? this.skill.flavor2 : ''
       let flavor3 = this.skill.flavor3 ? this.skill.flavor3 : ''
@@ -142,7 +147,7 @@ export default {
 
 
       let demonicOriginTitle = this.skill.demonicOrigin ? " Origin" : ''
-      let name = this.skill.beastName ? this.skill.beastName : this.skill.name
+      let name = this.skill.beastName ? this.skill.beastName + ' - ' + this.skill.decisionTrait + ' Beast' : this.skill.name
       let bountyHunterSpecialization = this.skill.bountyCategory ? ' (' + this.skill.bountyCategory + ' spec.)' : '' 
       let elementList = this.skill.elementList ? this.skill.elementList : ''
 

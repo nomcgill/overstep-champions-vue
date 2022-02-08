@@ -63,13 +63,13 @@ export default {
     this.$bus.$on(this.$bus.REPLACE_CHAMPION, replaceChampionListener)
     const setLevelListener = (level) => {this.setChampionLevel(level)}
     this.$bus.$on(this.$bus.SET_CHAMPION_LEVEL, setLevelListener)
-    const setRoleListener = (role, newSkills) => {this.setChampionRole(role, newSkills)}
+    const setRoleListener = (role, newSkills, decisionObject) => {this.setChampionRole(role, newSkills, decisionObject)}
     this.$bus.$on(this.$bus.SET_CHAMPION_ROLE, setRoleListener)
-    const setSourceListener = (source, newSkills) => {this.setChampionSource(source, newSkills)}
+    const setSourceListener = (source, newSkills, decisionObject) => {this.setChampionSource(source, newSkills, decisionObject)}
     this.$bus.$on(this.$bus.SET_CHAMPION_SOURCE, setSourceListener)
     const setCleanseSkillListener = category => {this.cleanseSkillsOfCategory(category)}
     this.$bus.$on(this.$bus.CLEANSE_CATEGORY_SKILLS, setCleanseSkillListener)
-    const setSkillListener = newSkills => {this.setChampionSkills(newSkills)}
+    const setSkillListener = (newSkills, decisionObject) => {this.setChampionSkills(newSkills, decisionObject)}
     this.$bus.$on(this.$bus.SET_CHAMPION_SKILLS, setSkillListener)
     const setNameListener = name => {this.setChampionName(name)}
     this.$bus.$on(this.$bus.SET_CHAMPION_NAME, setNameListener)
@@ -93,17 +93,17 @@ export default {
   },
   methods: {
     replaceChampion(newChampion){this.champion = newChampion},
-    setChampionLevel(level){additionalBusMethods.setChampionLevel(this.champion, level)},
-    setChampionRole(role, newSkillsList){
-      additionalBusMethods.setChampionRole(this.champion, this.database, role, newSkillsList)
+    setChampionLevel(level){additionalBusMethods.setChampionLevel(this.database, this.champion, level)},
+    setChampionRole(role, newSkillsList, decisionObject){
+      additionalBusMethods.setChampionRole(this.champion, this.database, role, newSkillsList, decisionObject)
       additionalBusMethods.formIntersection(this.champion, this.database);
     },
-    setChampionSource(source, newSkillsList){
-      additionalBusMethods.setChampionSource(this.champion, this.database, source, newSkillsList)
+    setChampionSource(source, newSkillsList, decisionObject){
+      additionalBusMethods.setChampionSource(this.champion, this.database, source, newSkillsList, decisionObject)
       additionalBusMethods.formIntersection(this.champion, this.database)
     },
     cleanseSkillsOfCategory(category){additionalBusMethods.cleanseSkills(this.champion, category)},
-    setChampionSkills(newSkillList){additionalBusMethods.newChampionSkillList(this.champion, newSkillList)},
+    setChampionSkills(newSkillList, decisionObject){additionalBusMethods.newChampionSkillList(this.champion, newSkillList, decisionObject)},
     setChampionName(name){this.champion = Object.assign({}, this.champion, {name:name})},
     // setChampionTitle(title){this.champion = Object.assign({}, this.champion, {title:title})},
     setChampionBackground(background){additionalBusMethods.updateBackground(this.champion, background)},
