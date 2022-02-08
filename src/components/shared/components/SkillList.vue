@@ -31,7 +31,7 @@
             >
               {{ currentQuantity(section) }}<span v-if="section !=='Given'">/{{ calculateSectionSizeBasedOnLevel(section) }}</span>
             </h3>
-            <h3 v-else-if="location === 'Champion Builder Skills' && !calculateSectionSizeBasedOnLevel(section)">Higher level required.</h3>
+            <h3 v-else-if="location === 'Champion Builder Skills' && !calculateSectionSizeBasedOnLevel(section)">Higher lvl required.</h3>
             <!-- <p>&nbsp;</p> -->
           </div>
         </div>
@@ -128,7 +128,7 @@ export default {
   created(){
     let levelSections = ["Given","Basic","Advanced","Master"]
     let actionTypeSections = ["Passive","Muscle","Evaluate","Influence","Channel"]
-    let categorySections = ["Background","Role","Source","Intersection"]
+    let categorySections = ["Background","Proficiency","Role","Source","Intersection"]
     let openedSections = {}
     levelSections.forEach(section => openedSections[section] = true)
     actionTypeSections.forEach(section => openedSections[section] = true)
@@ -172,7 +172,7 @@ export default {
     return {
       levelSections: ["Given","Basic","Advanced","Master"],
       actionTypeSections: ["Passive","Muscle","Evaluate","Influence","Channel"],
-      categorySections: ["Background","Role","Source","Intersection"],
+      categorySections: ["Background","Proficiency","Role","Source","Intersection"],
       openedSections: {},
     }
   },
@@ -198,6 +198,19 @@ export default {
       return sortedSkills
     },
     currentMatchingSkills(sortedBy, section, skillsToMatch){
+      // Checking for Bounty Hunter Specialization first.
+      if (this.location === 'Champion Builder Skills' && this.champion.role === 'Bounty Hunter' && this.champion.decision){
+        let specialty = this.champion.decision.role
+        skillsToMatch = skillsToMatch.filter(skill=>{
+          if (!skill.decisionTrait || skill.category !== 'Role'){
+            return true
+          }
+          else if (skill.decisionTrait === specialty){
+            return true
+          }
+          else { return false }
+        })
+      }
       if (sortedBy === "level"){
         // TESTING CHAMPION BUILDER
         // if (this.location === 'Champion Builder Skills'){
@@ -209,6 +222,7 @@ export default {
         //     }
         //   })
         // }
+        // console.log(skillsToMatch.filter(skill => section === skill.skillLevel))
         return skillsToMatch.filter(skill => section === skill.skillLevel)
       }
       if (sortedBy === "actionType"){

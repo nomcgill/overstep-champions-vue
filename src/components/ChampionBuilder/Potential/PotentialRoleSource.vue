@@ -11,9 +11,23 @@
                 :key="index"
                 :index="index"
                 :priorChoices="priorChoices"
-                @click.native="clickRoleSource(page, option.title)"
+                @click.native.prevent="thisRoleSourceModal = option.title"
+
             />
         </div>
+
+        <role-source-modal 
+            v-if="thisRoleSourceModal"
+            @applyRoleSource="applyRoleSource"
+            @close="thisRoleSourceModal = false"
+            v-model="thisRoleSourceModal"
+            :modalData="`modal`"
+            :database="database"
+            :champion="champion"
+            :roleSource="thisRoleSourceModal"
+            :page="page"
+        />
+
     </div>
 </template>
 
@@ -22,6 +36,7 @@
 <script>
 
 import RoleSourceIcon from '@/components/ChampionBuilder/Potential/RoleSourceIcon'
+import RoleSourceModal from '@/components/ChampionBuilder/Potential/RoleSourceModal'
 
 //    <Skill 
 //       v-for="(skill, index) in currentSkills"
@@ -37,15 +52,18 @@ export default {
     /* eslint-disable no-debugger */
 
     name: 'PotentialRoleSource',
-    components: { RoleSourceIcon },
+    components: { 
+        RoleSourceIcon,
+        RoleSourceModal
+    },
     props: {
-        page: {
-            required: true
-        },
         champion: {
             required: false
         },
         database: {
+            required: true
+        },
+        page: {
             required: true
         },
         images: {
@@ -69,10 +87,12 @@ export default {
         return {
             priorChoices: false,
             listOfRoles: this.database.roles.map(each => each.title),
-            listOfSources: this.database.sources.map(each => each.title)
+            listOfSources: this.database.sources.map(each => each.title),
+            thisRoleSourceModal: false
         }
     },
     methods: {
+        
         capitalizeFirst(string){
             return string.charAt(0).toUpperCase() + string.slice(1)
         },
@@ -80,26 +100,84 @@ export default {
             // console.log(string.toLowerCase().replace(/\s/g, ''))
             return string.toLowerCase().replace(/\s/g, '')
         },
-        clickRoleSource(page, roleSource){
+        filterOutRoleOrSourceTraits(category){
+            let nonTraitSkillList = this.champion.currentSkills.filter(skill=> {
+                if (skill.category === category){
+                    return !(skill.decisionTrait || skill.trait)
+                }
+                else {
+                    return true
+                }  
+            })
+            return nonTraitSkillList
+        },
+        // Bring in the role/source, its name, and the trait skills.
+        applyRoleSource(page, roleSourceTitle, newTraitSkills, currentDecisionName){
+            // console.log(this.champion.currentSkills)
+            // console.log(newTraitSkills)
+
+            let previousRoleDecision = this.champion.decision ? this.champion.decision.role : false
+            let previousSourceDecision = this.champion.decision ? this.champion.decision.source : false
             if (page === "roles"){
+
+                let decisionObject = {
+                    role: currentDecisionName,
+                    source: previousSourceDecision
+                }
+
+                // controlling the highlight logic
                 if (this.priorChoices){
                     this.priorChoices = this.priorChoices.filter(each => !this.listOfRoles.includes(each))
                 }
-                // Object.assign(this.editingCheckmark, {role: true})
-                // this.editingCheckmark.role = true
-                // this.editingCheckmark.push("role")
                 this.$emit('checkmarks', 'role')
-                this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSource)
+                // Only invoke if role is actually changing.
+                if (this.champion.role !== roleSourceTitle){
+                    this.$bus.$emit(this.$bus.CLEANSE_CATEGORY_SKILLS, 'Role')
+                    let newSkillList = [...newTraitSkills, ...this.champion.currentSkills]
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_ROLE, roleSourceTitle, newSkillList, decisionObject)
+                }
+                // Otherwise, only re-apply role traits.
+                else {
+                    // Filter out decisionTraits and traits, then combine the non-trait list with the all traits.
+                    let newSkillList = [...newTraitSkills, ...this.filterOutRoleOrSourceTraits("Role")]
+                    // Compare against old list before wasting an emit on a non-change.
+                    let currentSkillsString = JSON.stringify(this.champion.currentSkills.map(skill=>skill.name).sort())
+                    let newSkillListString = JSON.stringify(newSkillList.map(skill=> skill.name).sort())
+                    if (currentSkillsString !== newSkillListString){
+                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList, decisionObject)
+                    }
+                }
             }
+
+
             if (page === "sources"){
+
+                let decisionObject = {
+                    role: previousRoleDecision,
+                    source: currentDecisionName
+                }
+
                 if (this.priorChoices){
                     this.priorChoices = this.priorChoices.filter(each => !this.listOfSources.includes(each))
                 }
-                // Object.assign(this.editingCheckmark, {source: true})
-                // this.editingCheckmark.source = true
-                // this.editingCheckmark.push("source")
                 this.$emit('checkmarks', 'source')
-                this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSource)
+                // Only invoke if source is actually changing.
+                if (this.champion.source !== roleSourceTitle){
+                    this.$bus.$emit(this.$bus.CLEANSE_CATEGORY_SKILLS, 'Source')
+                    let newSkillList = [...newTraitSkills, ...this.champion.currentSkills]
+                    this.$bus.$emit(this.$bus.SET_CHAMPION_SOURCE, roleSourceTitle, newSkillList, decisionObject)
+                }
+                // Otherwise, only re-apply source traits.
+                else {
+                    // Filter out decisionTraits and traits, then combine the non-trait list with the all traits.
+                    let newSkillList = [...newTraitSkills, ...this.filterOutRoleOrSourceTraits("Source")]
+                    // Compare against old list before wasting an emit on a non-change.
+                    let currentSkillsString = JSON.stringify(this.champion.currentSkills.map(skill=>skill.name).sort())
+                    let newSkillListString = JSON.stringify(newSkillList.map(skill=>skill.name).sort())
+                    if (currentSkillsString !== newSkillListString){
+                        this.$bus.$emit(this.$bus.SET_CHAMPION_SKILLS, newSkillList, decisionObject)
+                    }
+                }
             }
         }
     }

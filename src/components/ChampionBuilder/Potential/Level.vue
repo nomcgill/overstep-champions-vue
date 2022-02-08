@@ -1,5 +1,5 @@
 <template>
-    <div id="level-row">
+    <div id="level-row" class="section">
         <button class="button-type-1" @click="changeLevel(false)" :class="{ disabled: currentLevel < 2}">-</button>
         <p>Level {{ currentLevel }}</p>
         <button class="button-type-1" @click="changeLevel(true)" :class="{ disabled: currentLevel > 11}">+</button>

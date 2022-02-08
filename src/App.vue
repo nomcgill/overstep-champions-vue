@@ -63,10 +63,14 @@ export default {
     this.$bus.$on(this.$bus.REPLACE_CHAMPION, replaceChampionListener)
     const setLevelListener = (level) => {this.setChampionLevel(level)}
     this.$bus.$on(this.$bus.SET_CHAMPION_LEVEL, setLevelListener)
-    const setRoleListener = role => {this.setChampionRole(role)}
+    const setRoleListener = (role, newSkills, decisionObject) => {this.setChampionRole(role, newSkills, decisionObject)}
     this.$bus.$on(this.$bus.SET_CHAMPION_ROLE, setRoleListener)
-    const setSourceListener = source => {this.setChampionSource(source)}
+    const setSourceListener = (source, newSkills, decisionObject) => {this.setChampionSource(source, newSkills, decisionObject)}
     this.$bus.$on(this.$bus.SET_CHAMPION_SOURCE, setSourceListener)
+    const setCleanseSkillListener = category => {this.cleanseSkillsOfCategory(category)}
+    this.$bus.$on(this.$bus.CLEANSE_CATEGORY_SKILLS, setCleanseSkillListener)
+    const setSkillListener = (newSkills, decisionObject) => {this.setChampionSkills(newSkills, decisionObject)}
+    this.$bus.$on(this.$bus.SET_CHAMPION_SKILLS, setSkillListener)
     const setNameListener = name => {this.setChampionName(name)}
     this.$bus.$on(this.$bus.SET_CHAMPION_NAME, setNameListener)
     // const setTitleListener = title => {this.setChampionTitle(title)}
@@ -75,29 +79,39 @@ export default {
     this.$bus.$on(this.$bus.SET_CHAMPION_BACKGROUND, setBackgroundListener)
     const setExpositionListener = (whichTime, exposition) => this.setChampionExposition(whichTime, exposition)
     this.$bus.$on(this.$bus.SET_CHAMPION_EXPOSITION, setExpositionListener)
-    const skillOpenListener = (skill) => {this.editOpened(this.champion, skill)}
+    const skillOpenListener = skill => {this.editOpened(skill)}
     this.$bus.$on(this.$bus.SKILL_OPEN, skillOpenListener)
-    const allSkillOpenListener = allOpenedState => {this.allOpened(this.champion, allOpenedState)}
+    const allSkillOpenListener = allOpenedState => {this.allOpened(allOpenedState)}
     this.$bus.$on(this.$bus.ALL_SKILL_OPEN, allSkillOpenListener)
-    const skillChoiceListener = (previousState, skill) => {this.toggleSkillChoice(this.champion, previousState, skill)}
+    const skillChoiceListener = (previousState, skill) => {this.toggleSkillChoice(previousState, skill)}
     this.$bus.$on(this.$bus.TOGGLE_SKILL_CHOICE, skillChoiceListener)
+    const proficiencyListener = (profChoice, profLevel) => {this.setProficiencySkills(profChoice, profLevel)}
+    this.$bus.$on(this.$bus.UPDATE_PROFICIENCIES, proficiencyListener)
   },
   beforeDestroy() {
     this.$bus.$off('close-drawer')
   },
   methods: {
     replaceChampion(newChampion){this.champion = newChampion},
-    setChampionLevel(level){this.champion = Object.assign({}, this.champion, {level:level})},
-    setChampionRole(role){this.champion = Object.assign({}, this.champion, {role:role}); additionalBusMethods.formIntersection(this.champion, this.database)},
-    setChampionSource(source){this.champion = Object.assign({}, this.champion, {source:source}); additionalBusMethods.formIntersection(this.champion, this.database)},
+    setChampionLevel(level){additionalBusMethods.setChampionLevel(this.database, this.champion, level)},
+    setChampionRole(role, newSkillsList, decisionObject){
+      additionalBusMethods.setChampionRole(this.champion, this.database, role, newSkillsList, decisionObject)
+      additionalBusMethods.formIntersection(this.champion, this.database);
+    },
+    setChampionSource(source, newSkillsList, decisionObject){
+      additionalBusMethods.setChampionSource(this.champion, this.database, source, newSkillsList, decisionObject)
+      additionalBusMethods.formIntersection(this.champion, this.database)
+    },
+    cleanseSkillsOfCategory(category){additionalBusMethods.cleanseSkills(this.champion, category)},
+    setChampionSkills(newSkillList, decisionObject){additionalBusMethods.newChampionSkillList(this.champion, newSkillList, decisionObject)},
     setChampionName(name){this.champion = Object.assign({}, this.champion, {name:name})},
     // setChampionTitle(title){this.champion = Object.assign({}, this.champion, {title:title})},
     setChampionBackground(background){additionalBusMethods.updateBackground(this.champion, background)},
     setChampionExposition(whichTime, exposition){additionalBusMethods.updateExposition(this.champion, whichTime, exposition)},
-    setChampionSkills(newSkillList){this.champion = Object.assign({}, this.champion, {currentSkills:newSkillList})},
-    editOpened(champion, skill){additionalBusMethods.editOpened(champion, skill)},
-    allOpened(champion, allOpenedState){additionalBusMethods.allOpened(champion, allOpenedState)},
-    toggleSkillChoice(champion, previousState, skill){additionalBusMethods.toggleSkillChoice(champion, previousState, skill)}
+    editOpened(skill){additionalBusMethods.editOpened(this.champion, skill)},
+    allOpened(allOpenedState){additionalBusMethods.allOpened(this.champion, allOpenedState)},
+    toggleSkillChoice(previousState, skill){additionalBusMethods.toggleSkillChoice(this.champion, previousState, skill)},
+    setProficiencySkills(profChoice, profLevel){additionalBusMethods.updateProficiencies(this.champion, profChoice, profLevel)},
   }
 }
 </script>
@@ -116,7 +130,7 @@ export default {
     margin: 0;
   }
 
-  button {
+  button, select {
     font-family: 'Josefin Sans', sans-serif;  /* margin-top: 60px; */
   }
 

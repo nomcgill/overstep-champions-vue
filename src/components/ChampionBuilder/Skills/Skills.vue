@@ -2,10 +2,13 @@
   <div>
     <p v-if="!champion.role || !champion.source">Man, you should really pick your Role and Source first.</p>
     <div v-else>
-      <h2>Skills</h2>
-      <div id="skills-nav-bar">
-        <div @click="currentDisplayTab = 'Role'" v-bind:class="{selectedTab: roleTab}">{{ champion.role }}</div>
-        <div @click="currentDisplayTab = 'Source'" v-bind:class="{selectedTab: sourceTab}">{{ champion.source }}</div>
+      <!-- <h2>Skills</h2> -->
+      <div id="skills-page-top">
+        <button v-bind:class='{disabled: champion.level < 4 }' id="prof-button" @click.prevent="nondamageModal = true" >Proficiencies</button>
+        <div id="skills-nav-bar">
+          <button @click="currentDisplayTab = 'Role'" v-bind:class="{selectedTab: roleTab}">{{ champion.role }}</button>
+          <button @click="currentDisplayTab = 'Source'" v-bind:class="{selectedTab: sourceTab}">{{ champion.source }}</button>
+        </div>
       </div>
       <skill-list 
         :champion="champion"
@@ -23,18 +26,31 @@
         :sortingBy="'level'"
       /> -->
     </div>
+
+      <non-damage-modal 
+        v-if="nondamageModal"
+        @close="nondamageModal = false"
+        v-model="nondamageModal"
+        :modalData="`modal`"
+        :database="database"
+        :champion="champion"
+      />
+
   </div>
 </template>
 
 <script>
 
 import SkillList from '@/components/shared/components/SkillList'
+import NonDamageModal from '@/components/ChampionBuilder/Skills/NonDamageModal.vue'
+
 
 export default {
   /* eslint-disable no-debugger */
   name: 'Skills',
   components: {
-    SkillList
+    SkillList,
+    NonDamageModal
   },
   props: {
       champion: {
@@ -68,7 +84,8 @@ export default {
   },
   data(){
     return {
-      currentDisplayTab: 'Role'
+      currentDisplayTab: 'Role',
+      nondamageModal: false
     }
   },
   methods: {
@@ -84,35 +101,57 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+#skills-page-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
 #skills-nav-bar {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 1.2em;
+  width: 60%;
 }
 
-#skills-nav-bar > div {
-  width: 30%;
+#skills-page-top button {
+  font-size: 1.1em;
   border-top: solid 1px black;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
   border-left: solid 1px black;
   padding: 8px 5px;
   text-align: center;
-  /* margin-left: 5px; */
   background-color: gray;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-#skills-nav-bar > div:first-child {
+#skills-nav-bar button {
+  width: 100%;
+}
+
+#skills-nav-bar > button:first-child {
   border-right: none;
 }
 
 #skills-nav-bar > .selectedTab {
   background-color: white;
   pointer-events: none;
+}
+
+#skills-page-top #prof-button {
+  background-color: #65a779;
+  color: white;
+  width: 32%;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: .2;
 }
 
 </style>
