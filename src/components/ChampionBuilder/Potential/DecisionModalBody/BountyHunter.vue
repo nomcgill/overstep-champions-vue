@@ -21,13 +21,7 @@ export default {
         }
     },
     computed: {
-        currentRoute(){
-            return this.$route.name
-        },
-        shownSkills(){
-            if (this.currentChoice === "Ranged"){return this.rangedSkills()}
-            else {return this.meleeSkills()}
-        }
+
     },
     data() {
         return {

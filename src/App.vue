@@ -121,7 +121,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200&display=swap');
 
   #app {
-    height: 100%;
+    min-height: 100%;
     color: #000000;
     font-family: 'Josefin Sans', sans-serif;  /* margin-top: 60px; */
   }

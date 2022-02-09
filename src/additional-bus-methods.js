@@ -135,12 +135,20 @@ const additionalBusMethods = {
 
   // Select or de-Select the skill after input click.
   toggleSkillChoice(champion, previousState, skill){
+    console.log(previousState)
+    console.log(skill)
     let newArray = []
     // Remove (or ensure removed state) the skill from current Champion skills.
     let filteredOutSkillArray = champion.currentSkills.filter(each=> !(each.name === skill.name && each.category === skill.category))
+    // Ensure list only has one skill of each Intersection tier.
+    if (skill.category === 'Intersection'){
+      filteredOutSkillArray = filteredOutSkillArray.filter(filteredSkill=>!(filteredSkill.category === "Intersection" && filteredSkill.skillLevel === skill.skillLevel))
+    }
+    // If the skill was there, remove it from the list.
     if (previousState){
       newArray = filteredOutSkillArray
     }
+    // If the skill wasn't there, add it to the list.
     if (!previousState){
        let skillArrayWithSkill = [...filteredOutSkillArray, skill]
        newArray = skillArrayWithSkill

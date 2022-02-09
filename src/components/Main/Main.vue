@@ -1,35 +1,64 @@
 <template>
-  <main>
-    {{ header }}
+  <div style="position: relative">
+      <div class='action-strip' id="view-bar" v-if="currentRoutePath.includes('/view')">
+        - GAME VIEW - 
+      </div>
+      <div class='action-strip' id="editing-bar" v-if="currentRoutePath.includes('/build/')">
+        - CHAMPION BUILDER - 
+      </div>
+    <main>
+
+
+      {{ header }}
+      <!-- <div id="go-to-roll-container">
+        <img id="go-to-roll-action" @click="actionRollModal = true" :src="dice" />
+      </div> -->
+
+      <action-roll-modal
+        v-if="actionRollModal"
+        @close="actionRollModal = false"
+        v-model="actionRollModal"
+        :modalData="`modal`"
+        :database="database"
+        :champion="champion"
+        :diceImg="dice"
+      />
+
+      <welcome
+        v-if="!champion && currentRoute === `ChampionView`"
+      />
+
+      <missing-requirements
+        v-if="champion && !requirementsMet && currentRoute === `ChampionView`"
+        :champion="champion"
+      />
+
+      <div id="game-view" v-if="currentRoute === 'ChampionView' && champion && requirementsMet">
+        <tracking-bar 
+          :database="database"
+          :champion="champion"
+        />
+        <skills-page
+          :champion="champion"
+          @activateActionRollModal="activateActionRollModal"
+        />
+      </div>
+
     
-    <welcome
-      v-if="!champion && currentRoute === `ChampionView`"
-    />
+      <champion-builder
+        v-if="currentRoutePath.includes('/build/')"
+        :champion="champion"
+        :database="database"
+      />
 
-    <missing-requirements
-      v-if="champion && !requirementsMet && currentRoute === `ChampionView`"
-      :champion="champion"
-    />
-
-    <skills-page
-      v-if="currentRoute === 'ChampionView' && champion && requirementsMet"
-      :champion="champion"
-    />
-
-  
-    <champion-builder
-      v-if="currentRoutePath.includes('/build/')"
-      :champion="champion"
-      :database="database"
-    />
-
-    <account
-      v-if="currentRoute === 'AccountLogIn'"
-      :champion="champion"
-    />
+      <account
+        v-if="currentRoute === 'AccountLogIn'"
+        :champion="champion"
+      />
 
 
-  </main>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -39,18 +68,25 @@ import { bus } from '@/main'
 
 import Welcome from '@/components/Main/Welcome'
 import MissingRequirements from '@/components/Main/MissingRequirements'
+import TrackingBar from '@/components/Main/TrackingBar'
 import SkillsPage from '@/components/Main/SkillsPage'
 import ChampionBuilder from '@/components/ChampionBuilder/ChampionBuilder'
 import Account from '@/components/Account/Account'
+import ActionRollModal from '@/components/Main/ActionRollModal'
+
+import Dice from '@/assets/ImageStore/dice.png'
+
 
 export default {
   name: 'Main',
   components: { 
     SkillsPage,
+    TrackingBar,
     MissingRequirements,
     Welcome,
     ChampionBuilder,
-    Account
+    Account,
+    ActionRollModal
   },
   props: {
     appChampion: {
@@ -66,7 +102,8 @@ export default {
       handler(newChamp){
         this.champion = newChamp
         // console.log("Watching Champion changes in Main...")
-        console.log(this.champion.currentSkills.map(skill=>skill.name))
+        // console.log(this.champion.currentSkills.map(skill=>skill.name))
+        console.log(this.champion)
         this.checkChampionRequirements()
       },
     }
@@ -75,7 +112,9 @@ export default {
     return {
       header: '',
       requirementsMet: false,
-      champion: false
+      champion: false,
+      actionRollModal: false,
+      dice: Dice
     }
   },
   created (){
@@ -102,6 +141,9 @@ export default {
       this.requirementsMet = true
       // this.champion
       // console.log('checking requirements...')
+    },
+    activateActionRollModal(){
+      this.actionRollModal = true
     }
   }
 }
@@ -110,6 +152,57 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 main {
-    padding: 1em .5em;
+    padding: 0 .5em 1em;
 }
+
+.action-strip {
+  color: white;
+  height: 20px;
+  line-height: 22px;
+  text-align: center;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+}
+#view-bar {
+  background-color: #65a779;
+}
+#editing-bar {
+  background-color: rgb(189, 133, 28);
+}
+
+/* #go-to-roll-container {
+  position: sticky;
+  z-index: 12;
+  display: flex;
+  align-self: flex-start;
+  top: 10px;
+  /* align-items: center; */
+  /* justify-content: flex-end; */
+  /* padding: 10px 0; */
+  /* height: 50px; */
+  /* width: 40px; */
+  /* background-color: black; */
+/* } */
+
+#go-to-roll-container {
+  /* position: -webkit-sticky;
+  position: sticky;
+  float: right;
+  top: 40px;
+  height: 0px;
+  width: 0px;
+  border-width: 30px;
+  border-color: red blue green yellow;
+  border-style: solid;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.262);
+  z-index: 999; */
+} 
+
+/* #go-to-roll-action {
+    padding: 4px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0);
+} */
+
 </style>

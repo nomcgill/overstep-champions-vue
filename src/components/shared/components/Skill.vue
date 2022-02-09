@@ -6,7 +6,7 @@
     <label :for="id">
       <div 
         class='skill-head-pane skill-header-open' 
-        v-bind:class="{selecting: location === 'Champion Builder Skills'}"
+        v-bind:class="{selecting: location === 'Champion Builder Skills' || location === 'Intersection Path'}"
         @click="toggleOpened"
       >
         <arrow v-if="!dropdownStatic" :direction="dropdownOpened ? `down` : `right`" />
@@ -34,7 +34,7 @@
           <!-- <div class="skill-checkbox" style="position: relative;"> -->
               <!-- style="position: absolute" -->
             <input 
-              v-if="location === 'Champion Builder Skills' && skill.skillLevel !== 'Given'"
+              v-if="(location === 'Champion Builder Skills' && skill.skillLevel !== 'Given') || location === 'Intersection Path'"
               type="checkbox"
               class="skill-checkbox top-checkbox"
               :id="id"
@@ -147,7 +147,10 @@ export default {
 
 
       let demonicOriginTitle = this.skill.demonicOrigin ? " Origin" : ''
-      let name = this.skill.beastName ? this.skill.beastName + ' - ' + this.skill.decisionTrait + ' Beast' : this.skill.name
+      let name = 
+        this.skill.beastName ? this.skill.beastName + ' - ' + this.skill.decisionTrait + ' Beast' 
+        : this.skill.beastSize ? this.skill.name + ' (' + this.skill.beastSize + ')'
+        : this.skill.name
       let bountyHunterSpecialization = this.skill.bountyCategory ? ' (' + this.skill.bountyCategory + ' spec.)' : '' 
       let elementList = this.skill.elementList ? this.skill.elementList : ''
 

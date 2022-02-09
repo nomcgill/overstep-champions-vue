@@ -37,7 +37,7 @@
                 />
             <!-- </div> -->
             <button class="button-type-1" id="choose-background-button" v-if="!champion.currentBackground" @click.prevent="backgroundModal = true">Choose a Background</button>
-            <button class="button-type-2" id="choose-background-button" v-if="champion.currentBackground" @click.prevent="backgroundModal = true">Change Background</button>
+            <button class="button-type-1" id="choose-background-button" v-if="champion.currentBackground" @click.prevent="backgroundModal = true">Change Background</button>
         </div>
 
         <background-modal 

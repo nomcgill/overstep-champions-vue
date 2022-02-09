@@ -92,7 +92,7 @@ export default {
     line-height: 30px;
     vertical-align: middle;
     padding: 0 4px;
-    margin-top: -1em;
+    margin-top: 5px;
 }
 .builder-router-button {
   font-size: 1.1em;

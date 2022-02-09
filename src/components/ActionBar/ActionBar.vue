@@ -13,10 +13,6 @@
       <router-link class="action-router-button" to="/account/signin" v-if="!loggedIn">Log In</router-link>
       <router-link class="action-router-button" to="/account/manage" v-if="loggedIn">Profile</router-link>
     </div>
-    <div id="editing-bar" v-if="currentRoutePath.includes('/build/')">
-      - CHAMPION BUILDER - 
-    </div>
-
 
       <notepad-modal 
         v-if="modal === `notepad`"
@@ -87,12 +83,6 @@ export default {
   /* height: 90px; */
   background-color: rgb(69, 69, 69);
   text-decoration: none;
-}
-#editing-bar {
-  height: 20px;
-  line-height: 22px;
-  background-color: #65a779;
-  text-align: center;
 }
 h2, #level-number {
   font-size: 1.7em;

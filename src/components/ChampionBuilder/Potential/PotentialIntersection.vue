@@ -7,22 +7,35 @@
       <h2 v-if="!currentIntersectionThreshold">Intersection Paths (inactive)</h2>
       <h2 v-else>Intersection: {{ champion.intersection.title }} Paths</h2>
       <div id="intersection-path-row">
-        <div class="intersection-path" v-bind:class="{enabled: advancedThreshold}">
+        <div class="intersection-path" v-bind:class="{enabled: advancedThreshold}" @click='intersectionModal = "Advanced"'>
           <h3>Advanced (lvl 6)</h3>
           <h3 v-if="currentIntersectionSkills.advanced && advancedThreshold">{{ currentIntersectionSkills.advanced.name }}</h3>
           <h3 v-else-if="!advancedThreshold">--</h3>
-          <h3 v-else>Skill Choice</h3>
+          <h3 v-else>--</h3>
           <p v-if="currentIntersectionSkills.advanced && advancedThreshold" class="edit">edit</p>
           <p v-else-if="advancedThreshold" class="edit">Choose Path</p>
         </div>
-        <div class="intersection-path" v-bind:class="{enabled: masterThreshold}">
+        <div class="intersection-path" v-bind:class="{enabled: masterThreshold}" @click="intersectionModal = 'Master'">
           <h3>Master (lvl 11)</h3>
           <h3 v-if="currentIntersectionSkills.master && masterThreshold">{{ currentIntersectionSkills.master.name }}</h3>
           <h3 v-else-if="!masterThreshold">--</h3>
-          <h3 v-else>Skill Choice</h3>
+          <h3 v-else>--</h3>
           <p v-if="currentIntersectionSkills.master && masterThreshold" class="edit">edit</p>
           <p v-else-if="masterThreshold" class="edit">Choose Path</p>
         </div>
+
+        <intersection-modal 
+          v-if="intersectionModal"
+          @applyIntersectionChoice="applyIntersectionChoice"
+          @close="intersectionModal = false"
+          v-model="intersectionModal"
+          :modalData="`modal`"
+          :database="database"
+          :champion="champion"
+          :intersectionLevel="intersectionModal"
+        />
+
+
       </div>
       <!-- <button @click.prevent="logCurrentPaths">log my intersection</button> -->
     </div>
@@ -32,8 +45,13 @@
 <script>
 /* eslint-disable no-debugger */
 
+import IntersectionModal from '@/components/ChampionBuilder/Potential/IntersectionModal'
+
 export default {
   name: 'PotentialIntersection',
+  components: {
+    IntersectionModal
+  },
   props: {
       champion: {
           required: true
@@ -44,6 +62,7 @@ export default {
   },
   data() {
     return {
+      intersectionModal: false
       // databaseCurrentIntersection: false
     }
   },
@@ -96,13 +115,16 @@ export default {
     },
   },
   methods: {
+    applyIntersectionChoice(){
+      console.log('intersection choice heard')
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.section {
+#potential-page > .section {
   text-align: center;
   padding: 8px 0;
 }
@@ -122,11 +144,13 @@ export default {
     color: gray;
     flex: 1;
     white-space: nowrap;
+    pointer-events: none;
 }
 
 .intersection-path.enabled {
   border: solid 1px black;
   color: black;
+  pointer-events: unset;
 }
 
 .intersection-path > * {

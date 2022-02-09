@@ -347,7 +347,7 @@ h3 {
 </style>
 
 <style>
-.removeInput .body-of-skills{
+.removeInput .body-of-skills {
   pointer-events: none;
 }
 

@@ -29,6 +29,8 @@ export default {
         margin-top: 17px;
         margin-right: 8px;
         float: right;
+        z-index: 1;
+        // position: relative;
     }
 
     .right {
