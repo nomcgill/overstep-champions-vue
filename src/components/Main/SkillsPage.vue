@@ -7,14 +7,6 @@
         <div id="skill-list-header-row">
             <h1>Skills</h1>
             <router-link to="/build/skills">edit</router-link>
-            <!-- <div id="go-to-roll-action" @click="$emit('activateActionRollModal')">Roll Action &#187;</div> -->
-            <div class="section-tab-row">
-                <div>Sort By:</div>
-                <div class="section-tab" @click="changeTab('level')" v-bind:class="{ activeSorting: sortedBy === 'level' }">Level</div>
-                <div class="section-tab" @click="changeTab('actionType')" v-bind:class="{ activeSorting: sortedBy === 'actionType' }">Action Type</div>
-                <div class="section-tab" @click="changeTab('category')" v-bind:class="{ activeSorting: sortedBy === 'category' }">Category</div>
-                <div class="section-tab" id="search-icon"> &#x1F50D;</div>
-            </div>
         </div>
 
         <skill-list
@@ -25,7 +17,7 @@
         <div id="go-to-roll-container">
             <!-- <h2>{{ champion.name }}</h2> -->
             <img id="go-to-roll-action" @click="$emit('activateActionRollModal')" :src="dice" />
-            <div id="base" />
+            <!-- <div id="base" /> -->
         </div>
     </div>
 </template>
@@ -43,18 +35,22 @@ export default {
     props: {
         champion: {
             required: false
+        },
+        sortingBy: {
+            required: false
         }
     },
+    computed: {
+        sortedBy(){
+            return this.sortingBy ? this.sortingBy : 'level'
+        }
+    },  
     data(){
         return {
-            sortedBy: 'level',
             dice: Dice
         }
     },
     methods: {
-        changeTab(input){
-            this.sortedBy = input
-        }
     }
 }
 </script>
@@ -65,28 +61,9 @@ export default {
   display: inline-block;
   margin-top: 12px;
 }
+
 #skill-list-header-row h1, #skill-list-header-row a {
   display: unset;
-}
-.section-tab-row {
-  display: inline-flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-}
-
-.section-tab {
-  margin: 5px;
-  padding: 5px;
-}
-
-#search-icon {
-    // padding-bottom: 10px;
-}
-
-.activeSorting {
-    background-color: #65a779;
-    color: white;
 }
 
 // #go-to-roll-action {

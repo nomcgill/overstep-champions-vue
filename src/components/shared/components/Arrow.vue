@@ -33,6 +33,11 @@ export default {
         // position: relative;
     }
 
+    .up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+    }
+
     .right {
         transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
@@ -41,6 +46,12 @@ export default {
     .down {
         transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
+    }
+
+    .left {
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+
     }
 
 </style>

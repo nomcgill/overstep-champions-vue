@@ -37,9 +37,12 @@
         <tracking-bar 
           :database="database"
           :champion="champion"
+          :sortingBy="sortingBy"
+          @changeSort="changeSort"
         />
         <skills-page
           :champion="champion"
+          :sortingBy="sortingBy"
           @activateActionRollModal="activateActionRollModal"
         />
       </div>
@@ -114,7 +117,8 @@ export default {
       requirementsMet: false,
       champion: false,
       actionRollModal: false,
-      dice: Dice
+      dice: Dice,
+      sortingBy: 'level'
     }
   },
   created (){
@@ -144,6 +148,9 @@ export default {
     },
     activateActionRollModal(){
       this.actionRollModal = true
+    },
+    changeSort(sortingBy){
+      this.sortingBy = sortingBy
     }
   }
 }

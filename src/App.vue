@@ -124,6 +124,7 @@ export default {
     min-height: 100%;
     color: #000000;
     font-family: 'Josefin Sans', sans-serif;  /* margin-top: 60px; */
+    /* max-width: 100vw; */
   }
 
   * {

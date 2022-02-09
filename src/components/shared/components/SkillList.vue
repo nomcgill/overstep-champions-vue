@@ -1,6 +1,5 @@
 <template>
   <div class="skill-list">
-    <p @click="toggleAll" v-if="location === 'Main'">Toggle All</p>
     <div v-if="sortedBy === 'level'">
       <div
         v-for="(section, index) in levelSections"
@@ -177,16 +176,6 @@ export default {
     }
   },
   methods: {
-    toggleAll(){
-      let allOpenedStatus = false
-      this.listOfSkills.forEach(skill => {
-        // Check if any skills are closed.
-        if (!skill.opened){
-          allOpenedStatus = true
-        }
-      })
-      this.$bus.$emit(this.$bus.ALL_SKILL_OPEN, allOpenedStatus)
-    },
     sortSkillsAlphabetically(skillsList){
       let sortedSkills = []
       let sortedSkillNames = skillsList.map(each=>each.name).sort()
