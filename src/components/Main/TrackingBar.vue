@@ -5,9 +5,6 @@
                 <h3 :class="{overstepped: overstepped}">Overstep</h3>
             </div>
             <div>
-                <h3>Notes</h3>
-            </div>
-            <div>
                 <h3>HP</h3>
                 <p>{{ champion.hp.current }}/{{ maxHP }}</p>
             </div>
@@ -15,19 +12,28 @@
                 <h3>DMG</h3>
                 <p>{{ championDamage }}</p>
             </div>
+            <div id="clipboard-icon-box">
+                <img :src="clipboard" alt="clipboard icon" id="clipboard-icon"/>
+            </div>
         </div>
         <div class="section-tab-row" v-if="menuOpen">
-            <img class="section-tab" id="search-icon" :src="searchIcon" alt="magnifying glass search icon" />
-            <div class="section-tab" style="border-left: solid 1px black; padding-left: 10px; margin-left: 0; margin-right: 0px;">Sort:</div>
+            <img class="section-tab" id="search-icon" :src="searchIcon" alt="magnifying glass search icon" @click="textFilterIsOpen = !textFilterIsOpen; $nextTick(()=> focusOnTextFilterInput())"/>
+            <div class="section-tab" style="color: gray; border-left: solid 1px black; padding-left: 20px; margin-left: 0; margin-right: -10px;">Sort:</div>
             <div class="section-tab" @click="$emit('changeSort', 'level')" :class="{ activeSorting: sortingBy === 'level' }">Level</div>
             <div class="section-tab" @click="$emit('changeSort', 'actionType')" :class="{ activeSorting: sortingBy === 'actionType' }">Action Type</div>
             <div class="section-tab" @click="$emit('changeSort', 'category')" :class="{ activeSorting: sortingBy === 'category' }">Category</div>
         </div>
-        <!-- <div> -->
-            <input v-model="textFilter" type="text" id="text-filter">
-        <!-- </div> -->
+        <input 
+            v-model.trim="textFilter" 
+            v-if="textFilterIsOpen" 
+            type="search" 
+            id="text-filter"
+            placeholder="Search through skills..."
+            @focus="focusedTextFilter = true"
+            @blur="focusedTextFilter = false"
+        >   
         <div class="dropdown-menu-tab">
-            <div id="toggle-skill-tab-portion" @click="toggleAll">Toggle Panels</div>
+            <div id="toggle-skill-tab-portion" @click="toggleAll">Toggle Boxes</div>
             <div id="dropdown-tab-arrow-background" @click="toggleFilterMenu">
                 <arrow :direction="arrowDirection" :class="{menuOpen: menuOpen}"/>
             </div>
@@ -40,14 +46,10 @@
 /* eslint-disable no-debugger */
 
 import MagnifyingGlass from '@/assets/foundation-icons/svgs/fi-magnifying-glass.svg'
-import Arrow from '@/components/shared/components/Arrow.vue'
-
+import Clipboard from '@/assets/foundation-icons/svgs/fi-clipboard.svg'
 
 export default {
     name: 'TrackingBar',
-    components: {
-        Arrow
-    },
     props: {
         database: {
             required: true
@@ -96,8 +98,42 @@ export default {
         return {
             sortedBy: 'level',
             searchIcon: MagnifyingGlass,
+            clipboard: Clipboard,
             menuOpen: false,
-            textFilter: ''
+            textFilter: '',
+            textFilterIsOpen: false,
+            baseScrollYValue: false,
+            focusedTextFilter: false
+        }
+    },
+    watch: {
+        focusedTextFilter: function(newFocusedState){
+            // As soon as textFilter becomes unfocused, check if it is also empty.
+            if (!newFocusedState && this.textFilter.length === 0){
+                // And beginning waiting for scroll to close the input.
+                this.closeOnSmallScroll()
+            }
+            else {
+                // Function will cancel event listener when it sees an active div.
+                this.closeOnSmallScroll()
+            }
+        },
+        menuOpen: function(newOpenStatus){
+            // If the menu is newly open...
+            if (newOpenStatus){
+                // Make sure that the text filter now open.
+                this.textFilterIsOpen = true
+                this.$nextTick(()=> this.focusOnTextFilterInput())
+            }
+        },
+        textFilterIsOpen: function(){
+            this.closeOnSmallScroll()
+        },
+        textFilter: function (newTextFilter) {
+            this.$emit('setTextFilter', newTextFilter)
+            if (newTextFilter === ''){
+                document.body.scrollTop = document.documentElement.scrollTop = 95;
+            }
         }
     },
     methods: {
@@ -113,6 +149,46 @@ export default {
                 }
             })
             this.$bus.$emit(this.$bus.ALL_SKILL_OPEN, allOpenedStatus)
+        },
+        focusOnTextFilterInput(){
+            if (this.textFilterIsOpen){
+                document.getElementById("text-filter").focus({preventScroll:true})
+            }
+        },
+        // Watch for deselect and small scroll.
+        closeOnSmallScroll(){
+            this.baseScrollYValue = window.scrollY
+            let vm = this
+            let lastKnownScrollPosition = 0;
+            let ticking = false;
+
+            // If scrolling and textFilter still empty, then close textFilter input and stop listening.
+            function scrollingAction(scrollPos) {
+                // While active, constantly reset starting point for where to begin detecting scroll position.
+                if (vm.focusedTextFilter){
+                    vm.baseScrollYValue = scrollPos
+                }
+                if (
+                    Math.abs(vm.baseScrollYValue - scrollPos) > 200
+                    && vm.textFilter.length === 0
+                ){
+                    // Closing due to scroll.
+                    vm.textFilterIsOpen = false
+                }
+            }
+
+            function scrollListener() {
+                lastKnownScrollPosition = window.scrollY;
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        scrollingAction(lastKnownScrollPosition);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+
+            document.addEventListener('scroll', scrollListener);
         }
     }
 }
@@ -135,7 +211,7 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 50px;
+    height: 45px;
     border-bottom: solid 1px black;
     background-color: white;
     /* line-height: 50px; */
@@ -165,7 +241,7 @@ export default {
     /* padding: 5px; */
     /* height: 20px; */
     line-height: 20px;
-    padding: 8px 5px;
+    padding: 3px 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -183,8 +259,8 @@ export default {
     border-right: solid 0px black;
     border-bottom: solid 0px black;
     border-left: solid 0px black;
-    padding-left: 10px;
-    padding-right: 0px;
+    padding-left: 15px;
+    padding-right: 5px;
 }
 
 .overstepped {
@@ -194,10 +270,55 @@ export default {
 }
 
 #text-filter {
-    height: 22px;
-    margin: 3px 6px;
-    width: 150px;
+    height: 26px;
+    /* margin: 3px 6px; */
+    width: 200px;
     border-radius: 0;
+    border: none;
+    border-bottom: solid 1px black;
+    border-right: solid 1px black;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+    padding-left: 10px;
+    padding-top: 4px;
+    font-size: .85em;
+}
+
+#text-filter:focus-visible {
+    outline: none;
+    /* border: none; */
+    /* outline: solid 1px rgb(116, 76, 1); */
+}
+
+::-webkit-search-cancel-button {
+    /* position:relative; */
+    /* right:20px;   */
+
+    /* -webkit-appearance: none; */
+
+    /* height: 20px; */
+    /* width: 20px;
+    border-radius:10px;
+    background-color: gray; */
+
+    /* background: red; */
+    /* height: 16px; */
+    /* width: 16px; */
+    background-color: #434343;
+    border-radius: 5px;
+    position: relative;
+}
+
+::-webkit-search-cancel-button:after {
+    /* position: absolute; */
+    /* top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; */
+    content: "\274c"; /* use the hex value here... */
+    font-size: 16px; 
+    color: #FFF;
+    line-height: 16px;
+    text-align: center;
 }
 
 .dropdown-menu-tab {
@@ -229,6 +350,7 @@ export default {
 
 #toggle-skill-tab-portion {
     padding: 6px 8px 3px 5px;
+    font-size: .85em;
     /* border-right: solid 1px black; */
     /* padding-right: 8px;
     padding-top: 7px; */
@@ -239,6 +361,7 @@ export default {
     height: 100%;
     width: 35px;
     border-left: solid 1px black;
+    background-color: #65a779;
 }
 
 #tracking-bar .dropdown-arrow {
@@ -246,10 +369,22 @@ export default {
     margin-top: 6px;
     margin-right: 12px;
     padding: 4px;
+    border-color: white;
 }
 
 #tracking-bar .dropdown-arrow.menuOpen {
     margin-top: 10px
+}
+
+#clipboard-icon-box {
+    height: 60px;
+}
+
+#clipboard-icon {
+    height: 60%;
+    padding: 10% 70% 20%;
+    opacity: .8;
+    /* color: white; */
 }
 
 </style>

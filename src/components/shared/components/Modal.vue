@@ -197,8 +197,8 @@ export default {
       border-radius: 2px 2px 0 0;
     }
     &.fullscreen {
-      width: calc(100% - 40px);
-      height: calc(100vh - 40px);
+      width: calc(100% - 20px);
+      height: calc(100vh - 20px);
     }
     .header {
       display: flex;
@@ -230,7 +230,7 @@ export default {
       padding: 0 20px 20px;
       height: 100%;
       flex: 1;
-      max-height: calc(59vh);
+      // max-height: calc(59vh);
       overflow: scroll;
     }
 
@@ -250,6 +250,8 @@ export default {
     #close-x {
       // margin-top: 8px;
     }
+
+    
   }
 
   @media only screen and (min-width: 768px) {

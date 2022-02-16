@@ -13,10 +13,15 @@
             :champion="champion"
             :location="'Main'"
             :sortingBy="sortedBy"
+            :textFilter="textFilter"
         />
-        <div id="go-to-roll-container">
+        <div id="go-to-roll-container" :class="{iconShadow: !rollModalOpen}">
             <!-- <h2>{{ champion.name }}</h2> -->
-            <img id="go-to-roll-action" @click="$emit('activateActionRollModal')" :src="dice" />
+            <img 
+                id="go-to-roll-action" 
+                @click="$emit('activateActionRollModal')" 
+                :src="rollModalOpen ? arrowRight : dice" 
+            />
             <!-- <div id="base" /> -->
         </div>
     </div>
@@ -25,7 +30,9 @@
 <script>
 
 import SkillList from '@/components/shared/components/SkillList'
+
 import Dice from '@/assets/ImageStore/dice.png'
+import ArrowRight from '@/assets/foundation-icons/svgs/fi-arrow-right.svg'
 
 export default {
     name: 'SkillsPage',
@@ -38,6 +45,12 @@ export default {
         },
         sortingBy: {
             required: false
+        },
+        textFilter: {
+            type: String
+        },
+        rollModalOpen: {
+            required: false
         }
     },
     computed: {
@@ -47,7 +60,8 @@ export default {
     },  
     data(){
         return {
-            dice: Dice
+            dice: Dice,
+            arrowRight: ArrowRight
         }
     },
     methods: {
@@ -84,7 +98,7 @@ export default {
     bottom: 0px;
     right: 0px;
 
-    z-index: 12;
+    z-index: 1000;
     display: flex;
     //   z-index: 1000;
     margin-right: -14px;
@@ -92,9 +106,12 @@ export default {
     justify-content: flex-end;
     padding: 4px 0 4px 4px;
     background-color: #A41720;
-    margin: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.331);
+    margin: 8px;
     border-radius: 5%;
+}
+
+.iconShadow {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.331);
 }
 
 #go-to-roll-container > * {

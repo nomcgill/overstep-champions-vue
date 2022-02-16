@@ -21,7 +21,6 @@
         :modalData="`modal`"
         :database="database"
         :champion="champion"
-        :diceImg="dice"
       />
 
       <welcome
@@ -39,10 +38,13 @@
           :champion="champion"
           :sortingBy="sortingBy"
           @changeSort="changeSort"
+          @setTextFilter="setTextFilter"
         />
         <skills-page
           :champion="champion"
           :sortingBy="sortingBy"
+          :textFilter="textFilter"
+          :rollModalOpen="actionRollModal"
           @activateActionRollModal="activateActionRollModal"
         />
       </div>
@@ -76,8 +78,6 @@ import SkillsPage from '@/components/Main/SkillsPage'
 import ChampionBuilder from '@/components/ChampionBuilder/ChampionBuilder'
 import Account from '@/components/Account/Account'
 import ActionRollModal from '@/components/Main/ActionRollModal'
-
-import Dice from '@/assets/ImageStore/dice.png'
 
 
 export default {
@@ -117,8 +117,8 @@ export default {
       requirementsMet: false,
       champion: false,
       actionRollModal: false,
-      dice: Dice,
-      sortingBy: 'level'
+      sortingBy: 'level',
+      textFilter: '',
     }
   },
   created (){
@@ -147,10 +147,13 @@ export default {
       // console.log('checking requirements...')
     },
     activateActionRollModal(){
-      this.actionRollModal = true
+      this.actionRollModal = !this.actionRollModal
     },
     changeSort(sortingBy){
       this.sortingBy = sortingBy
+    },
+    setTextFilter(text){
+      this.textFilter = text
     }
   }
 }

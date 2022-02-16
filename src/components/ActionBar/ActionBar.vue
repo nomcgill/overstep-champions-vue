@@ -7,7 +7,8 @@
     <div id="character-route-pane">
       <character-bar 
         v-if="!this.champion && currentRoutePath.includes('/build/') || this.champion"
-        :champion="this.champion" />
+        :champion="this.champion" 
+      />
       <!-- <character-bar v-if="currentRoutePath.includes('/build/')" :champion="this.champion" /> -->
       <router-link class="action-router-button" to="/build/potential" v-if="!currentRoutePath.includes('/build/') && !this.champion">+ New Champion</router-link>
       <router-link class="action-router-button" to="/account/signin" v-if="!loggedIn">Log In</router-link>

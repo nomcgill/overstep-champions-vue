@@ -42,13 +42,9 @@
 <script>
 
 // import { bus } from '@/main'
-import Modal from '@/components/shared/components/Modal.vue'
 
 export default {
   name: 'ExpositionModal',
-  components: {
-    Modal
-  },
   props: {
     champion: {
       required: true

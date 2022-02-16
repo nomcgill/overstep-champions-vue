@@ -44,6 +44,7 @@
               :key="index"
               :index="index"
               :location="location"
+              @applySkillString="applySkillString"
             />
           </div>
         </transition>
@@ -122,6 +123,10 @@ export default {
     },
     database: {
       required: false
+    },
+    textFilter: {
+      required: false,
+      type: String
     }
   },
   created(){
@@ -155,9 +160,11 @@ export default {
       return this.currentDisplayTab
     },
     listOfSkills(){
+
       if (this.location === 'Main'){
         return this.currentSkills
       }
+
       if (this.location === 'Champion Builder Skills'){
         let acquiredGivenSkills = this.currentTabChampionSkills.filter(skill => skill.skillLevel === "Given")
         let skillBankNoGiven = this.skillBank.filter(skill=> skill.skillLevel !== "Given")
@@ -173,6 +180,7 @@ export default {
       actionTypeSections: ["Passive","Muscle","Evaluate","Influence","Channel"],
       categorySections: ["Background","Proficiency","Role","Source","Intersection"],
       openedSections: {},
+      dataSkillStrings: []
     }
   },
   methods: {
@@ -186,6 +194,7 @@ export default {
       }))
       return sortedSkills
     },
+    // Takes the already sorted/filtered list and does one last look to return only those of the matching category.
     currentMatchingSkills(sortedBy, section, skillsToMatch){
       // Checking for Bounty Hunter Specialization first.
       if (this.location === 'Champion Builder Skills' && this.champion.role === 'Bounty Hunter' && this.champion.decision){
@@ -200,6 +209,19 @@ export default {
           else { return false }
         })
       }
+
+      // Exclude items that are filtered out due to textFilter results.
+      // Currently the skill needs to match all separate (by whitespaces) strings somewhere in its blob.
+      // console.log('heard')
+      if (this.location === 'Main' && this.dataSkillStrings.length === skillsToMatch.length){
+          // Match up the skillStrings with the skills.
+          skillsToMatch = skillsToMatch.filter(currentSkill => {
+            let currentSkillDataSkill = this.dataSkillStrings.filter(dataSkill=> dataSkill.skillName === currentSkill.name)[0]
+            // If this returns positive, include it in the shown list.
+            return this.checkForSkillStringMatch(currentSkillDataSkill.skillString)
+          })
+      }
+
       if (sortedBy === "level"){
         // TESTING CHAMPION BUILDER
         // if (this.location === 'Champion Builder Skills'){
@@ -253,6 +275,23 @@ export default {
       if (this.currentQuantity(section) <= this.calculateSectionSizeBasedOnLevel(section) && this.disabledSection(section)){
         return true
       }
+    },
+    applySkillString(skillName, skillString){
+      let arrayWithoutSkill = this.dataSkillStrings.filter(skillPair => skillName !== skillPair.skillName)
+      this.dataSkillStrings = [...arrayWithoutSkill, {skillName: skillName, skillString: skillString}]
+      // console.log(this.dataSkillStrings)
+    },
+    checkForSkillStringMatch(dataSkillString){
+      let lowerCaseTextFilter = this.textFilter.toLocaleLowerCase()
+      let stringArray = lowerCaseTextFilter.split(' ')
+      let result = true
+      for (let chunk of stringArray){
+        if (dataSkillString.search(chunk) < 0){
+          result = false
+        }
+      }
+
+      return result
     }
   }
 }

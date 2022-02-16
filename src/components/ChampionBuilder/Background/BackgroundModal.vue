@@ -69,13 +69,11 @@
 // import { bus } from '@/main'
 import Skill from '@/components/shared/components/Skill.vue'
 
-import Modal from '@/components/shared/components/Modal.vue'
 import BackgroundChoice from '@/components/ChampionBuilder/Background/BackgroundChoice.vue'
 
 export default {
   name: 'BackgroundModal',
   components: {
-    Modal,
     BackgroundChoice,
     Skill
   },

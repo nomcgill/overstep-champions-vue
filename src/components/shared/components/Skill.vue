@@ -2,11 +2,15 @@
   <div 
     :id="skillStrings.name"
     class="skill-box"
-    v-bind:class="[{static:dropdownStatic, builderSkill: this.location === 'Champion Builder Skills'},'skill-index-'+index]">
+    v-bind:class="[
+      {static:dropdownStatic, builderSkill: this.location === 'Champion Builder Skills'},
+      'skill-index-'+index
+    ]"
+  >
     <label :for="id">
       <div 
         class='skill-head-pane skill-header-open' 
-        v-bind:class="{selecting: location === 'Champion Builder Skills' || location === 'Intersection Path'}"
+        v-bind:class="{selecting: location === 'Champion Builder Skills' || location === 'Intersection Path', headerOfOpenedSkill: dropdownOpened}"
         @click="toggleOpened"
       >
         <arrow v-if="!dropdownStatic" :direction="dropdownOpened ? `down` : `right`" />
@@ -70,13 +74,8 @@
 <script>
 /* eslint-disable no-debugger */
 
-import Arrow from '@/components/shared/components/Arrow'
-
 export default {
   name: 'Skill',
-  components: {
-    Arrow
-  },
   props: {
     index: {
       type: Number,
@@ -100,12 +99,33 @@ export default {
     static: {
       type: Boolean,
       required: false
+    },
+    matchesTextFilter: {
+      type: Boolean
     }
   },
   created(){
     // if (this.location === 'Champion Builder Skills'){
     //   debugger;
     // }
+    if (this.location === 'Main'){
+        let searchableString = this.skillStrings.flavor +
+        ' ' + this.skillStrings.flavor2 +
+        ' ' + this.skillStrings.flavor3 +
+        ' ' + this.skillStrings.flavor4 +
+        ' ' + this.skillStrings.impact +
+        ' ' + this.skillStrings.impact2 +
+        ' ' + this.skillStrings.demonicOriginTitle +
+        ' ' + this.skillStrings.name +
+        ' ' + this.skillStrings.bountyHunterSpecialization +
+        ' ' + this.skillStrings.elementList +
+        ' ' + this.skillStrings.actionType +
+        ' ' + this.skillStrings.shownCategory +
+        ' ' + this.skillStrings.flavor4 +
+        ' ' + this.skillStrings.skillLevel
+      
+      this.$emit('applySkillString', this.skill.name, searchableString.toLowerCase())
+    }
   },
   computed: {
     dropdownStatic(){
@@ -131,7 +151,7 @@ export default {
       }
       return false
     },
-    skillStrings: function(){
+    skillStrings(){
 
       let flavor = typeof this.skill.flavor === 'string' && this.skill.flavor !== ' ' ? this.skill.flavor : ''
       let flavor2 = this.skill.flavor2 ? this.skill.flavor2 : ''
@@ -190,7 +210,7 @@ export default {
           skillLevel: this.skill.skillLevel
       }
       return skillStrings
-    }
+    }    
   },
   data(){
     return {
@@ -256,9 +276,18 @@ h3 {
   
 }
 
+.skill-header-open {
+  /* background-color: rgb(155, 155, 155); */
+}
+
 
 .skill-dropdown {
   padding: .5em;
+}
+
+.headerOfOpenedSkill {
+  background-color: rgb(211, 211, 211);
+  color: black;
 }
 
 .skill-checkbox {
@@ -272,13 +301,13 @@ h3 {
   /* border: solid black; */
   border-top: solid 1px rgb(85, 85, 85);
   border-left: solid 1px rgb(85, 85, 85);
-  border-right: solid 1px rgb(85, 85, 85);
-  border-bottom: solid 1px rgb(85, 85, 85);
+  border-right: solid 0px rgb(85, 85, 85);
+  border-bottom: solid 0px rgb(85, 85, 85);
   /* border-radius: 0px; */
   
-    -webkit-transition: background-color 250ms linear;
+  /* -webkit-transition: background-color 250ms linear;
   -ms-transition: background-color 250ms linear;
-  transition: background-color 250ms linear;
+  transition: background-color 250ms linear; */
 }
 
 .skill-checkbox:active, .skill-checkbox:checked:active {
@@ -286,13 +315,18 @@ h3 {
 }
 
 .skill-checkbox:checked {
-  appearance: none;
-  background-color: #65a779;
-  border: solid 1px rgb(85, 85, 85);
-
+   -webkit-appearance: none;
+  /* border: solid 2px rgb(85, 85, 85); */
+  /* border: none; */
+  
+  background-color: rgb(43, 43, 43);
+  /* background-color: #65a779; */
   -webkit-transition: background-color 250ms linear;
   -ms-transition: background-color 250ms linear;
   transition: background-color 250ms linear;
+
+  /* background-image: url('~@/assets/foundation-icons/svgs/fi-check.svg') */
+  
 }
 
 .skill-checkbox input {
@@ -357,7 +391,9 @@ h3 {
   /* margin: 12px 0; */
 }
 
-
+.textFilteredOut {
+  display: none;
+}
 
 @media only screen and (min-width: 768px) {
 

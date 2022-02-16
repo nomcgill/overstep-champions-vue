@@ -66,13 +66,9 @@
 <script>
 /* eslint-disable no-debugger */
 // import { bus } from '@/main'
-import Modal from '@/components/shared/components/Modal'
 
 export default {
   name: 'NonDamageModal',
-  components: {
-    Modal
-  },
   props: {
     champion: {
       required: true

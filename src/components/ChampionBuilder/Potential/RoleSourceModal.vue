@@ -114,8 +114,6 @@
 /* eslint-disable vue/no-unused-components */
 
 
-// import { bus } from '@/main'
-import Modal from '@/components/shared/components/Modal.vue'
 import DecisionModal from '@/components/ChampionBuilder/Potential/DecisionModalBody/DecisionModal'
 // import DecisionTraits from '@/components/ChampionBuilder/Potential/DecisionTraits'
 import BountyHunter from '@/components/ChampionBuilder/Potential/DecisionModalBody/BountyHunter'
@@ -127,7 +125,6 @@ import BountyHunter from '@/components/ChampionBuilder/Potential/DecisionModalBo
 export default {
     name: 'RoleSourceModal',
     components: {
-        Modal,
         DecisionModal,
         BountyHunter,
         // Demonic,

@@ -21,13 +21,9 @@
 <script>
 
 import { bus } from '@/main'
-import Modal from '@/components/shared/components/Modal.vue'
 
 export default {
   name: 'NotepadModal',
-  components: {
-    Modal
-  },
   props: {
   },
   data(){

@@ -46,13 +46,11 @@
 
 
 // import { bus } from '@/main'
-import Modal from '@/components/shared/components/Modal.vue'
 import Skill from '@/components/shared/components/Skill'
 
 export default {
     name: 'IntersectionModal',
     components: {
-        Modal,
         Skill
     },
     props: {

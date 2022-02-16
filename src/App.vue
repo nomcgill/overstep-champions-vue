@@ -131,7 +131,7 @@ export default {
     margin: 0;
   }
 
-  button, select {
+  button, select, input {
     font-family: 'Josefin Sans', sans-serif;  /* margin-top: 60px; */
   }
 
@@ -162,6 +162,11 @@ export default {
     text-align: right;
   }
 
+  .bold {
+    font-weight: 900;
+    text-shadow: 0 0 1px rgb(162, 162, 162);
+  }
+
   .slide-fade-enter-active {
     transition: all .3s ease;
   }
@@ -190,6 +195,35 @@ export default {
 
   .button-type-2 {
     background-color: transparent;
+  }
+
+  /* Defining some flex shortcuts */
+  .flex-row-around {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .flex-row-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flex-column-around {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .flex-column-between {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
   }
 
 </style>
