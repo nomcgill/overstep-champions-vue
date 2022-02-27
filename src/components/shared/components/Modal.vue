@@ -143,11 +143,21 @@ export default {
     window.addEventListener('keyup', this.onKeyup)
     this.disableTabNavigationOutside()
     this.$bus.$emit('close-drawer')
+    // console.log(this.level)
+    // Disable scrolling of background while any modal exists.
+    if (this.$globalModalData.level > 0){
+      document.documentElement.style.overflow = 'hidden'
+    }
   },
   beforeDestroy () {
     this.$globalModalData.level--
     window.removeEventListener('keyup', this.onKeyup)
     this.restoreTabNavigationOutside()
+    // console.log(this.level)
+    // Restore scrolling when modals are gone.
+    if (this.$globalModalData.level === 0){
+      document.documentElement.style.overflow = 'auto'
+    }
   }
 }
 </script>

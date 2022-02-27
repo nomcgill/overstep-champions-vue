@@ -3,13 +3,16 @@
       <div class='action-strip' id="view-bar" v-if="currentRoutePath.includes('/view')">
         - GAME VIEW - 
       </div>
-      <div class='action-strip' id="editing-bar" v-if="currentRoutePath.includes('/build/')">
+      <div class='action-strip' id="editing-bar" v-if="currentRoutePath.includes('/build')">
         - CHAMPION BUILDER - 
+      </div>
+      <div class='action-strip' id="account-bar" v-if="currentRoutePath.includes('/account')">
+        - ACCOUNT - 
       </div>
     <main>
 
 
-      {{ header }}
+      <!-- {{ header }} -->
       <!-- <div id="go-to-roll-container">
         <img id="go-to-roll-action" @click="actionRollModal = true" :src="dice" />
       </div> -->
@@ -59,6 +62,7 @@
       <account
         v-if="currentRoute === 'AccountLogIn'"
         :champion="champion"
+        :browserStatus="browserStatus"
       />
 
 
@@ -69,7 +73,7 @@
 <script>
 /* eslint-disable no-debugger */
 
-import { bus } from '@/main'
+// import { bus } from '@/main'
 
 import Welcome from '@/components/Main/Welcome'
 import MissingRequirements from '@/components/Main/MissingRequirements'
@@ -97,6 +101,9 @@ export default {
     },
     database: {
       required: true
+    },
+    browserStatus: {
+      required: true
     }
   },
   watch: {
@@ -113,7 +120,7 @@ export default {
   },
   data() {
     return {
-      header: '',
+      // header: '',
       requirementsMet: false,
       champion: false,
       actionRollModal: false,
@@ -122,9 +129,9 @@ export default {
     }
   },
   created (){
-    bus.$on('changeIt', (data) => {
-      this.header = data;
-    })
+    // bus.$on('changeIt', (data) => {
+    //   this.header = data;
+    // })
   },
   computed: {
     currentRoute(){
@@ -179,6 +186,10 @@ main {
 }
 #editing-bar {
   background-color: rgb(189, 133, 28);
+}
+
+#account-bar {
+  background-color: rgb(11, 52, 77);
 }
 
 /* #go-to-roll-container {

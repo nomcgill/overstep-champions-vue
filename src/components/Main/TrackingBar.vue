@@ -270,7 +270,7 @@ export default {
 }
 
 #text-filter {
-    height: 26px;
+    height: 27px;
     /* margin: 3px 6px; */
     width: 200px;
     border-radius: 0;
@@ -323,11 +323,11 @@ export default {
 
 .dropdown-menu-tab {
     float: right;
-    margin-top: -1px;
+    /* margin-top: -1px; */
     margin-right: -2px;
     height: 25px;
     /* width: 35px; */
-    border-radius: 5%;
+    /* border-radius: 0 0  0; */
     background-color: rgb(255, 255, 255);
     /* box-shadow: 0 0 2px black; */
     border: solid 1px black;

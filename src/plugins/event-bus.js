@@ -18,6 +18,8 @@ export default {
         EventBus.ALL_SKILL_OPEN = 'ALL_SKILL_OPEN'
         EventBus.TOGGLE_SKILL_CHOICE = 'TOGGLE_SKILL_CHOICE'
         EventBus.UPDATE_PROFICIENCIES = 'UPDATE_PROFICIENCIES'
+        EventBus.ADD_ROLL_TO_HISTORY = 'ADD_ROLL_TO_HISTORY'
+        
 
 
         EventBus.CREATE_TOAST = 'CREATE_TOAST'

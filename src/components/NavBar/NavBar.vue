@@ -2,8 +2,8 @@
   <nav>
       <router-link to="/"><h1>OVERSTEP</h1></router-link>
       <div id="nav-right">
-        <router-link to="/" @click.native="callChampion(lucyfer)"><p>Lucyfer</p></router-link>
-        <router-link to="/" @click.native="callChampion(false)"><p>Clear</p></router-link>
+        <router-link to="/" @click.native="callChampion(lusyfer)"><p>Lusyfer</p></router-link>
+        <!-- <router-link to="/" @click.native="callChampion(false)"><p>Clear</p></router-link> -->
       </div>
   </nav>
 </template>
@@ -19,7 +19,7 @@ export default {
     champion: {
       required: false
     },
-    lucyfer: {
+    lusyfer: {
       required: false,
     }
   },
@@ -29,7 +29,12 @@ export default {
   },
   methods: {
     callChampion(newChampion){
-      this.$bus.$emit(this.$bus.REPLACE_CHAMPION, newChampion)
+      if (!this.champion){
+        this.$bus.$emit(this.$bus.REPLACE_CHAMPION, newChampion)
+      }
+      else {
+        this.$bus.$emit(this.$bus.REPLACE_CHAMPION, false)
+      }
     }
   }
 }

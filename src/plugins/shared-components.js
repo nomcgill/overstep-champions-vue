@@ -9,6 +9,7 @@ import Skill from '@/components/shared/components/Skill'
 import SkillList from '@/components/shared/components/SkillList'
 import Slider from '@/components/shared/components/Slider'
 import Spinner from '@/components/shared/components/Spinner'
+import TimeAgo from '@/components/shared/components/TimeAgo'
 
 export default {
     install(Vue){
@@ -22,5 +23,6 @@ export default {
         Vue.component('skill-list', SkillList)
         Vue.component('slider', Slider)
         Vue.component('spinner', Spinner)
+        Vue.component('time-ago', TimeAgo)
     }
 }

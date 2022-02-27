@@ -9,9 +9,7 @@ import InfoIcon from '@/assets/foundation-icons/svgs/fi-info.svg'
 export default {
     name: 'InfoIcon',
     props: {
-        direction: {
-            required: true
-        }
+
     },
     data(){
         return {
@@ -27,6 +25,8 @@ export default {
   .info-icon {
     height: 60px;
   }
+
+  
 
 </style>
  

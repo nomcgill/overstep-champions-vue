@@ -4,10 +4,10 @@
   <div id="action-bar" 
   > {{ header }}
     <!-- @click="changeHeader" -->
-    <div id="character-route-pane">
+    <div id="character-route-pane" v-if="!(currentRoutePath.includes('/account') && !champion)">
       <character-bar 
-        v-if="!this.champion && currentRoutePath.includes('/build/') || this.champion"
-        :champion="this.champion" 
+        v-if="!champion && currentRoutePath.includes('/build') || champion"
+        :champion="champion" 
       />
       <!-- <character-bar v-if="currentRoutePath.includes('/build/')" :champion="this.champion" /> -->
       <router-link class="action-router-button" to="/build/potential" v-if="!currentRoutePath.includes('/build/') && !this.champion">+ New Champion</router-link>

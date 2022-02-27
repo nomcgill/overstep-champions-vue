@@ -5,7 +5,7 @@ import Vue from 'vue'
 // Vue.set(someobject, 'key', 'value')
 
 
-const additionalBusMethods = {
+const busMethods = {
 
   // Set the new Champion level.
   setChampionLevel(database, champion, level){
@@ -135,8 +135,6 @@ const additionalBusMethods = {
 
   // Select or de-Select the skill after input click.
   toggleSkillChoice(champion, previousState, skill){
-    console.log(previousState)
-    console.log(skill)
     let newArray = []
     // Remove (or ensure removed state) the skill from current Champion skills.
     let filteredOutSkillArray = champion.currentSkills.filter(each=> !(each.name === skill.name && each.category === skill.category))
@@ -202,8 +200,16 @@ const additionalBusMethods = {
     
     }
 
+  },
+
+  // Add another roll to the front of the roll history.
+  addRollToHistory(champion, rollObject){
+    champion.rollHistory.unshift(rollObject)
+    // console.log(rollObject)
+    // debugger;
+    Vue.set(champion, "rollHistory", champion.rollHistory)
   }
 
 }
 
-export default additionalBusMethods
+export default busMethods
